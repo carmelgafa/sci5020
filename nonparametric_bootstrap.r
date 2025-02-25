@@ -5,21 +5,21 @@ cv<-function(x) sqrt(var(x))/mean(x)
 #creating a vector for 1000 bootstrap estimates
 boot<-numeric(1000)
 #sampling x with replacement and calculating the
-#coefficient of variation 
-for (i in 1:1000) boot[i]<-cv(sample(x,replace=T))
+#coefficient of variation
+for (i in 1:1000) boot[i] <- cv(sample(x, replace = TRUE))
 #bootstrap estimator is the mean of boot
 cvbootstrap<-mean(boot)
 #variance of the bootstrap estimator
 varcvbootstrap<-var(boot)
 #CI for Bootstrap using normal distribution
-LCInormal95<-cvbootstrap+qnorm(0.025)*sqrt(varcvbootstrap)
-UCInormal95<-cvbootstrap+qnorm(0.975)*sqrt(varcvbootstrap)
+LCInormal95 <- cvbootstrap + qnorm(0.025) * sqrt(varcvbootstrap)
+UCInormal95 <- cvbootstrap + qnorm(0.975) * sqrt(varcvbootstrap)
 #CI for Bootstrap using t distribution
-LCIt95<-cvbootstrap+qt(0.025,24)*sqrt(varcvbootstrap)
-UCIt95<-cvbootstrap+qt(0.975,24)*sqrt(varcvbootstrap)
+LCIt95 <- cvbootstrap + qt(0.025, 24) * sqrt(varcvbootstrap)
+UCIt95 <- cvbootstrap + qt(0.975, 24) * sqrt(varcvbootstrap)
 #empirical confidence intervals
-LCIempirical95<-quantile(boot,probs=0.025)
-UCIempirical95<-quantile(boot,probs=0.975)
+LCIempirical95 <- quantile(boot, probs = 0.025)
+UCIempirical95 <- quantile(boot, probs = 0.975)
 #sortedboot<-sort(boot)
 #LCIempirical95<-sortedboot[25]
 #UCIempirical95<-sortedboot[975]
