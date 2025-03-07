@@ -1,0 +1,106 @@
+\documentclass[]{article}
+% bib use
+\usepackage{cite}
+\usepackage{amsmath, array}
+
+
+
+%opening
+\title{Principles of statistical inference project - Part 1}
+\author{Carmel Gafa'}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Question 1}
+
+The \textbf{Exponential Distribution} is a continuous probability distribution that represents the time intervals between consecutive events in a Poisson process, where events happen independently and at a constant average rate. It is defined by a single parameter, $\lambda$, referred to as the rate parameter.
+
+
+\subsection{Give reference to a publication in which the exponential distribution has been used in practise.  
+	Explain the context in which this distribution has been used in this publication.}
+
+Mahmud et al. presented a study where they analyzed and estimated response times to questions on Twitter\cite{mahmud2013will}. The authors developed predictive models to estimate response wait times, exploring three different approaches:
+
+\begin{itemize}
+	\item Personalized wait time models: These models estimate the wait time for a specific user based on their individual history of response wait times. They assume each response event for a user occurs continuously and independently at a constant average rate, modelled by an exponential distribution. Each user's rate parameter $\lambda$ is estimated as the inverse of their average past response wait times.
+	
+	These models demonstrated a promising ability to estimate response times on Twitter. They generally outperformed generalized models and showed reasonable accuracy, especially for an hour or more time limits. The choice of cut-off probability (a threshold used to determine whether a user is considered sufficiently likely to respond to a question on Twitter within a given period) significantly influenced the precision and recall of the predictions.
+	
+	\item Generalized wait time models: Instead of individual models, a single model is built using the previous responses of all users in the dataset, again using the exponential distribution. The rate parameter $\lambda$ is estimated from the responses of all users. This model underperformed compared to the personalized models in estimating response times on Twitter.
+	
+	
+	\item Time-sensitive wait time models: These models incorporate sensitivity to the time of day or day of the week when questions are sent for both generalized and personalized models by calculating the rate parameter based on responses to questions sent during a specific day or hour. Personalized time-sensitive models only considered users with at least five responses during the modelled time interval. Incorporating time sensitivity had a modest positive impact on the generalized models but did not consistently improve the performance of the personalized models.
+\end{itemize}
+
+
+\subsection{State the mean and the variance of $X$.}
+
+As $X$ follows an exponential distribution with scale parameter, $X \sim Exp(X)$, the expected value or mean is:
+\begin{equation}
+	E[X] = \frac{1}{\lambda}
+\end{equation}
+and the variance is:
+\begin{equation}
+	Var(X) = \frac{1}{\lambda^2}
+\end{equation}
+
+
+\subsection{ Derive the moment estimator of $\lambda$.}
+
+The p.d.f. for an exponential distribution is:
+
+\begin{equation}
+	f(x)=\lambda e^{- \lambda x} \space,x \leq 0
+\end{equation}
+
+
+\noindent The expected value is by definition of the first moment:
+
+\begin{flalign*}
+E[X] &= \int_{0}^{\infty} x\space f(x) dx \\
+		&= \int_{0}^{\infty} x \lambda e^{- \lambda x} dx \\
+		&= \lambda \int_{0}^{\infty} x e^{- \lambda x}
+\end{flalign*}
+
+\noindent If we let:
+
+
+\begin{tabular}{ll}
+$u = x$ 									& $du = 1$ \\
+$v = -\frac{e^{- \lambda x}}{\lambda}$	& $dv =  e^{- \lambda x}$
+\end{tabular}
+
+\bigskip
+\noindent Integrating by parts, $\int udv = uv -\int v du$:
+
+\begin{flalign*}
+E[X]	&= \lambda\left( \left[ - \frac{ x e^{- \lambda x}}{\lambda} \right]_0^\infty - \int_{0}^{\infty} -\frac{e^{- \lambda x}}{\lambda} (1) dx \right)\\
+		&=   \left[ - x e^{- \lambda x}\right]_0^\infty + \int_{0}^{\infty} -e^{- \lambda x}dx
+\end{flalign*}
+
+
+\noindent Considering $\left[  x e^{- \lambda x}\right]_0^\infty$:
+\begin{itemize}
+	\item $- x e^{- \lambda x} = 0$ when $x=0$
+	\item $\displaystyle \lim_{x \to \infty}  x e^{- \lambda x} = 0$
+\end{itemize}
+
+\noindent So the first term is removed;
+
+\begin{flalign*}
+	E[X] &=\int_{0}^{\infty} -e^{- \lambda x}dx\\
+		&= \left[  -\frac{1}{\lambda} -e^{- \lambda x} \right]_0^\infty\\
+		&= 0 - \left( - \frac{1}{\lambda}\right)\\
+		&= \frac{1}{\lambda}
+\end{flalign*}
+
+
+\bibliography{references}
+\bibliographystyle{plain}
+
+
+
+\end{document}
