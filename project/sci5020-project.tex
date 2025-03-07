@@ -65,12 +65,11 @@ E[X] &= \int_{0}^{\infty} x\space f(x) dx \\
 		&= \lambda \int_{0}^{\infty} x e^{- \lambda x}
 \end{flalign*}
 
-\noindent If we let:
-
+\noindent We let:
 
 \begin{tabular}{ll}
-$u = x$ 									& $du = 1$ \\
-$v = -\frac{e^{- \lambda x}}{\lambda}$	& $dv =  e^{- \lambda x}$
+$u = x$ 									& $du = (1) dx$ \\
+$v = -\frac{e^{- \lambda x}}{\lambda}$	& $dv =  e^{- \lambda x} dx$
 \end{tabular}
 
 \bigskip
@@ -82,10 +81,10 @@ E[X]	&= \lambda\left( \left[ - \frac{ x e^{- \lambda x}}{\lambda} \right]_0^\inf
 \end{flalign*}
 
 
-\noindent Considering $\left[  x e^{- \lambda x}\right]_0^\infty$:
+\noindent Let us consider $\left[  x e^{- \lambda x}\right]_0^\infty$:
 \begin{itemize}
-	\item $- x e^{- \lambda x} = 0$ when $x=0$
-	\item $\displaystyle \lim_{x \to \infty}  x e^{- \lambda x} = 0$
+	\item $- x e^{- \lambda x} = 0$, when $x=0$
+	\item $\displaystyle \lim_{x \to \infty}  x e^{- \lambda x} = 0$, as exponential decay dominates polynomial growth
 \end{itemize}
 
 \noindent So the first term is removed;
@@ -96,6 +95,87 @@ E[X]	&= \lambda\left( \left[ - \frac{ x e^{- \lambda x}}{\lambda} \right]_0^\inf
 		&= 0 - \left( - \frac{1}{\lambda}\right)\\
 		&= \frac{1}{\lambda}
 \end{flalign*}
+
+\noindent As in the method of moments the sample mean is equal to theoretical expectation;
+$$
+E[X] = \frac{1}{\lambda}=\overline{X}
+$$
+
+\noindent and solving for $\lambda$
+
+\begin{equation}
+	\hat{\lambda} = \frac{1}{\overline{X}}
+\end{equation}
+
+\subsection{Use the second moment to obtain another estimator of $\lambda$}
+
+For an exponential distribution with rate parameter $\lambda$, the second moment,
+
+\begin{flalign*}
+	E[X^2] &= \int_{0}^{\infty} x^2 \space f(x) dx \\
+	&= \int_{0}^{\infty} x^2 \lambda e^{- \lambda x} dx \\
+	&= \lambda \int_{0}^{\infty} x^2 e^{- \lambda x}
+\end{flalign*}
+
+\noindent We let:
+
+\begin{tabular}{ll}
+	$u = x^2$ 									& $du = 2x dx$ \\
+	$v = -\frac{e^{- \lambda x}}{\lambda}$	& $dv =  e^{- \lambda x} dx$
+\end{tabular}
+
+\begin{flalign*}
+	E[X^2]	&= \lambda\left( \left[ - \frac{ x^2 e^{- \lambda x}}{\lambda} \right]_0^\infty - \int_{0}^{\infty} -\frac{e^{- \lambda x}}{\lambda} 2x dx \right)\\
+	&=   \left[ - x^2 e^{- \lambda x}\right]_0^\infty + \int_{0}^{\infty} 2xe^{- \lambda x}dx
+\end{flalign*}
+
+\noindent Let us consider $\left[  x^2 e^{- \lambda x}\right]_0^\infty$:
+\begin{itemize}
+	\item $- x^2 e^{- \lambda x} = 0$, when $x=0$
+	\item $\displaystyle \lim_{x \to \infty}  x^2 e^{- \lambda x} = 0$, as exponential decay dominates polynomial growth
+\end{itemize}
+
+Then
+
+$$E[X^2] =  \int_{0}^{\infty} 2xe^{- \lambda x}dx$$
+
+\noindent We let:
+
+\begin{tabular}{ll}
+	$u = x$ 									& $du = dx$ \\
+	$v = -\frac{e^{- \lambda x}}{\lambda}$	& $dv =  e^{- \lambda x} dx$
+\end{tabular}
+
+$$E[X^2] = 2\left(  \left[  -\frac{xe^{- \lambda x}}{\lambda} \right] - \int_{0}^{\infty} e^{- \lambda x}dx \right)$$
+
+\noindent We have seen previously that the first term will equate to zero.
+
+\begin{flalign*}
+	E[X^2]	&= 2  \int_{0}^{\infty} \frac{e^{- \lambda x}}{\lambda} dx \\
+			&= \left[ - \frac{2 e^{- \lambda x}}{\lambda^2} \right]_0^\infty \\
+			&= 0-\left(-\frac{2}{\lambda^2}\right) \\
+			& = \frac{2}{\lambda^2}
+\end{flalign*}
+
+
+\noindent The variance of the exponential distribution is given by:
+
+\begin{flalign*}
+	Var(X)	&= E[X^2] - E[X]^2\\
+			&= \frac{2}{\lambda^2} - \left(\frac{1}{\lambda}\right)^2\\
+			&= \frac{1}{\lambda^2}
+\end{flalign*}
+
+\noindent We can estimate the sample variance
+
+$$\hat{\sigma}^2 = \frac{1}{\hat{\lambda}^2}$$
+
+\noindent and solving for $\lambda$
+
+\begin{equation}
+	\hat{\lambda} = \frac{1}{\sqrt{\hat{\sigma}^2}}
+\end{equation}
+
 
 
 \bibliography{references}
