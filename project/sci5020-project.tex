@@ -1,8 +1,14 @@
 \documentclass[]{article}
 % bib use
 \usepackage{cite}
+% tabular eqn
 \usepackage{amsmath, array}
-
+% code listing
+\usepackage{listings}
+% images
+\usepackage{graphicx} 
+% lock images
+\usepackage{float}
 
 
 %opening
@@ -177,6 +183,91 @@ $$\hat{\sigma}^2 = \frac{1}{\hat{\lambda}^2}$$
 \end{equation}
 
 
+\subsection{Comment on the unbiasedness and consistency of the moment estimator for $\lambda$ derived in Q1iii.
+	State any assumption/s that need to be made to check for unbiasedness and consistency.}
+
+\subsection{Use R software to generate 1000 data points from an exponential distributed random variable using
+	any admissible parameter value for $\lambda$}
+
+The R script generates 1000 points from an exponentially distributed random variable with a rate parameter $\lambda$ of 1.5. It then plots a histogram of these points and overlays the theoretical density function of the exponential distribution. The result is shown in Figure \ref{fig:img-1-6-1}.
+
+
+\begin{lstlisting}
+library(ggplot2)
+library(glue)
+
+set.seed(50)
+lambda <- 1.5
+x <- rexp(n = 1000, rate = lambda)
+
+data <- data.frame(x = x)
+
+p <- ggplot(data,
+		aes(x = x)) +
+	geom_histogram(
+		aes(y = after_stat(density)),
+		bins = 50, fill = "blue",
+		color = "black",
+		alpha = 0.6) +
+	stat_function(
+		fun = function(x) lambda * exp(-lambda * x),
+		color = "red",
+		size = 1) +
+	labs(title = glue("Histogram of exponentially distributed 
+	random variable with lambda = {lambda}"),
+		x = "x", y = "Density") +
+	theme_minimal() +
+	theme(plot.title = element_text(hjust = 0.5))
+\end{lstlisting}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-1-5-1.jpeg}
+	\caption{Exponential distributed random variable; histogram of 1000 generated points and theoretical distribution}
+	\label{fig:img-1-6-1}
+\end{figure}
+
+\subsubsection{Write down the log-likelihood function for this exponentially distributed random variable.}
+
+For sample $\mathbf{x} = ( x_1, \dots, x_n )^T$ obtained on an exponential distributed random variable $X$, with parameter vector $\mathbf{\theta}=(\lambda)$, the likelihood
+
+
+\begin{flalign*}
+	L(\mathbf{x}, \mathbf{\theta})	&= \prod_{i=1}^{n} f(x_i, \mathbf{\theta}) \\
+		&=  \prod_{i=1}^{n} \lambda e^{-\lambda x_i} \\
+		&= \lambda^n e^{\sum_{i=1}^n \lambda x_i}
+\end{flalign*}
+
+\noindent The log-likelihood is then
+
+$$	
+l(\mathbf{x}, \mathbf{\theta}) = n \space log(\lambda) - \lambda \sum_{i=0}^{n} x_i	
+$$
+
+\noindent Taking the derivative with respect to $\lambda$,
+
+$$
+\frac{\partial l(\mathbf{x}, \mathbf{\theta}) }{\partial\lambda} =
+\frac{n}{\lambda} - \sum_{i=0}^{n} x_i	
+$$
+
+\noindent for maximum $\frac{\partial l(\mathbf{x}, \mathbf{\theta}) }{\partial\lambda}$
+
+\begin{flalign*}
+	L\frac{\partial l(\mathbf{x}, \mathbf{\theta}) }{\partial\lambda}	&= 0 \\ 
+	\frac{n}{\lambda} - \sum_{i=0}^{n} x_i	 &= 0 \\
+	\frac{n}{\lambda}  &= \sum_{i=0}^{n} x_i	
+\end{flalign*}
+
+\noindent So that
+
+\begin{equation}
+	\hat{\lambda} = \frac{n}{\sum_{i=0}^{n} x_i	} = \frac{1}{\overline{x}}
+\end{equation}
+
+
+\subsubsection{Evaluate the log-likelihood function for the generated data as a function of $\lambda$, and plot the resulting log-likelihood function against different values of $\lambda$. Present the plot together with the answers.}
 
 \bibliography{references}
 \bibliographystyle{plain}
