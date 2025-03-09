@@ -9,6 +9,8 @@
 \usepackage{graphicx} 
 % lock images
 \usepackage{float}
+% colored syntax highlighting
+\usepackage{xcolor}  
 
 
 %opening
@@ -19,8 +21,21 @@
 
 \maketitle
 
+% style for all code snippets
+\lstset{
+	basicstyle=\ttfamily\footnotesize,  % Use Courier (monospace)
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt,
+	breaklines=true, breakatwhitespace=true,
+	frame=single, rulecolor=\color{gray}  % Single-line frame
+}
+
+
 
 \section{Question 1}
+
+
+\textbf{Consider a random variable $X$ that follows an exponential distribution with scale parameter $\lambda$.}
+\bigskip
 
 The \textbf{Exponential Distribution} is a continuous probability distribution that represents the time intervals between consecutive events in a Poisson process, where events happen independently and at a constant average rate. It is defined by a single parameter, $\lambda$, referred to as the rate parameter.
 
@@ -316,6 +331,180 @@ print(glue("Lambda value for maximum log-likelihood is {max_lambda}"))
 \end{lstlisting}
 
 
+
+\section{title}
+
+\section{title}
+
+\section{Question 4 - Jackknife and bootstrap}
+
+\textbf{Consider 50 observations of bivariate pair $(X,Y)$ in resampling.xlsx. Use the nls command in R to estimate the nonlinear regression $Y=\frac{aX}{b+X} + \epsilon$.}
+
+\bigskip
+
+The code that estimated the nonlinear regression is below. The plots obtained are shown in Figure \ref{fig:img-4-1}. The estimated values of a is $\hat{a} = 14.56$ and b is $\hat{b} = 7.10$
+
+\begin{lstlisting}
+library(openxlsx)
+library(ggplot2)
+
+# load file
+script_dir <- getwd()
+file_path <- file.path(script_dir, "resampling.xlsx")
+df <- read.xlsx(file_path, colNames = TRUE)
+
+print(c("number of rows: ", nrow(df)))
+
+# estimate the parameters of the model
+init_a <- 1
+init_b <- 1
+
+nls_model <- nls(y ~ (a * x) / (b + x),
+data = df,
+start = list(a = init_a, b = init_b))
+
+
+estimated_params <- coef(nls_model)
+a_hat <- estimated_params["a"]
+b_hat <- estimated_params["b"]
+cat("Estimated a:", a_hat, "\n")
+cat("Estimated b:", b_hat, "\n")
+
+# predict the values of y
+df$Predicted <- predict(nls_model)
+print(head(df))
+
+# plot the data
+p <- ggplot(df, aes(x = x  , y = y)) +
+geom_point(color = "blue", alpha = 0.5) +
+geom_line(aes(
+	y = Predicted),
+	color = "red",
+	linewidth = 1) +
+labs(title = "Nonlinear Regression: Y = (aX) / (b+X)",
+x = "X", y = "Y") +
+theme_minimal()
+
+print(p)
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-4-1}
+	\caption{Nonlinear regression fit: observed vs. predicted values}
+	\label{fig:img-4-1}
+\end{figure}
+
+
+\subsection{Construct a computer code in R to find the Jackknife and Bootstrap estimators of $a$ and $b$. In the 
+	case of Jackknife, section randomly the sampling into 5 partitions of size 10. In the case of 
+	Bootstrap, generate 1000 samples of size 100 with replacement. }
+
+
+
+The code below executes the following steps on the data.
+
+\begin{enumerate}
+	\item \textbf{Shuffle the dataset:} The data is randomly shuffled to remove any ordering bias:
+
+	\item \textbf{Divide the data into $m$ Jackknife partitions:} The dataset is split into $m = 5$ partitions, each missing a unique subset of 5 elements. Note that the number of partitions was maintained as a parameter
+	
+	\item \textbf{Fit the NLS model for each Jackknife sample:} A nonlinear regression model is fitted to each Jackknife sample using Nonlinear Least Squares (NLS) to estimate parameters $a$ and $b$. The model is defined as:
+	\begin{equation}
+		Y = \frac{aX}{b+X}
+	\end{equation}
+	and is refitted for each sample $S_{-a}$, which excludes partition $P_a$.
+	
+	\item \textbf{Compute Jackknife bias-corrected estimates:} The Jackknife estimate for each parameter is calculated using the bias correction formula:
+	\begin{equation}
+		\hat{\theta}_{\text{jack}} = m \hat{\theta} - (m-1) \hat{\theta}_{(-a)}
+	\end{equation}
+	where:
+	\begin{itemize}
+		\item $m = 5$ is the number of partitions.
+		\item $\hat{\theta}$ is the parameter estimate from the full dataset.
+		\item $\hat{\theta}_{(-a)}$ is the parameter estimate from the jackknife sample with partition $a$ removed.
+	\end{itemize}
+	
+	\item \textbf{Compute final Jackknife estimates for $a$ and $b$:} The final Jackknife estimates for $a$ and $b$ are obtained by averaging the bias-corrected values across all jackknife samples:
+	\begin{equation}
+		\hat{a}_{jk} = \frac{1}{m} \sum_{a=1}^{m} \hat{a}_{\text{jack}, a}, \quad
+		\hat{b}_{jk} = \frac{1}{m} \sum_{a=1}^{m} \hat{b}_{\text{jack}, a}
+	\end{equation}
+\end{enumerate}
+
+
+
+
+\begin{lstlisting}
+# -------------------------
+# Jackknife
+# -------------------------
+
+
+number_partitions <- 5
+
+#shuffle the dataframe
+set.seed(123)
+df_shuf <- df[sample(nrow(df)), ]
+
+# Generate jackknife samples by removing each fold of 5 elements
+jackknife_samples <- lapply(1:number_partitions,
+function(a) df_shuf[-((number_partitions * (a - 1) + 1):(number_partitions * a)), ])
+
+
+# we have calculated theta_hat_m before
+theta_hat_m <- estimated_params
+
+theta_m_a <- function(data) {
+	model <- nls(y ~ (a * x) / (b + x),
+	data = data,
+	start = list(a = theta_hat_m["a"],
+	b = theta_hat_m["b"]))
+	return(coef(model))
+}
+
+# jackknife estimator for each partition
+nlsjk <- sapply(jackknife_samples, function(y_a) number_partitions * theta_hat_m - (number_partitions - 1) * theta_m_a(y_a))
+
+#evaluating the jackknife estimator of the parametrs
+jackknife_estimates <- rowMeans(nlsjk)
+
+a_hat_jk <- jackknife_estimates["a"]
+b_hat_jk <- jackknife_estimates["b"]
+
+
+df$predicted_jk <- (a_hat_jk * df$x) / (b_hat_jk + df$x)
+
+
+# Plot with Jackknife predictions and legend
+p_jk <- ggplot(df, aes(x = x, y = y)) +
+geom_point(color = "blue", alpha = 0.5, size = 3) +
+geom_line(aes(y = Predicted, color = "Full Sample Prediction"),
+linewidth = 1, linetype = "dashed") +
+geom_line(aes(y = predicted_jk, color = "Jackknife Prediction"),
+linewidth = 1.2) +
+labs(title = "Nonlinear Regression: Full Sample vs. Jackknife",
+x = "X", y = "Y", color = "Legend") +
+theme_minimal() +
+scale_color_manual(values = c("Full Sample Prediction" = "red",
+"Jackknife Prediction" = "green"))
+
+# Print the plot
+print(p_jk)
+
+\end{lstlisting}
+
+
+The resulting plot is shown below in Figure \ref{fig:img-4-1-1}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-4-1-1}
+	\caption{Nonlinear regression fit: observed vs. predicted values including Jackknife predictions}
+	\label{fig:img-4-1-1}
+\end{figure}
 
 
 \bibliography{references}

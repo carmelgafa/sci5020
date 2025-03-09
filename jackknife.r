@@ -5,8 +5,10 @@ x <- c(8.26, 6.33, 10.4, 5.27, 5.35, 5.61, 6.12, 6.19,
 #defining the function cv
 cv <- function(x) sqrt(var(x)) / mean(x)
 
+
 #reordering x and placing it in y
 y <- mat.or.vec(25, 1)
+set.seed(123)
 y <- sample(x, length(x), replace = FALSE)
 
 #ya's are y without partition a for a=1,...,5
@@ -30,6 +32,8 @@ cvjk[2] <- 5 * cv(x) - 4 * cv(y2)
 cvjk[3] <- 5 * cv(x) - 4 * cv(y3)
 cvjk[4] <- 5 * cv(x) - 4 * cv(y4)
 cvjk[5] <- 5 * cv(x) - 4 * cv(y5)
+
+
 #evaluating the jackknife estimator of the CV
 #by averaging the cvjk's
 cvjackknife<-mean(cvjk)
