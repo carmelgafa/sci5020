@@ -59,7 +59,7 @@ and the variance is:
 The p.d.f. for an exponential distribution is:
 
 \begin{equation}
-	f(x)=\lambda e^{- \lambda x} \space,x \leq 0
+	f(x)=\lambda e^{- \lambda x} \space,x \leq 0, \space \lambda > 0
 \end{equation}
 
 
@@ -268,6 +268,55 @@ $$
 
 
 \subsubsection{Evaluate the log-likelihood function for the generated data as a function of $\lambda$, and plot the resulting log-likelihood function against different values of $\lambda$. Present the plot together with the answers.}
+
+
+The follwoing listing calculates and plots the log-likelihood values for an exponential distribution with varying $\lambda$ values. The resulting plot can be examined in Figure \ref{fig:img-1-6-2}
+
+
+\begin{lstlisting}
+	lambda_values <- seq(0.1, 5, by = 0.01)
+	log_likelihood_values <- sapply(lambda_values,
+	function(lambda) LL_exponential(lambda, x))
+	
+	df <- data.frame(lambda_values, log_likelihood_values)
+	
+	p <- ggplot(df, 
+		aes(x = lambda_values, 
+		y = log_likelihood_values)) +
+	geom_point(
+		color = "blue",
+		alpha = 0.6) +
+		labs(
+		title = "Log-Likelihood with varying
+		 lambda values",
+		x = "Lambda",
+		y = "Log-Likelihood") +
+	theme_bw()
+	
+	quartz()
+	print(p)
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-1-6-2.jpeg}
+	\caption{Log-likelihood plot for an exponential distribution with varying $\lambda$}
+	\label{fig:img-1-6-2}
+\end{figure}
+
+
+\subsubsection{Using the plot or otherwise, which estimate for $\lambda$ is the MLE? Give a reason for your answer.}
+
+As we have seen in the previous question, the maximum likelihood estimation is the value for which the derivative of the log-likelihood with respect to lambda is zero, that is the peak of the curve shown in Figure \ref*{fig:img-1-6-2}. This can be easily calculated using the code below. The value obtained for $\hat{\lambda}$ was \textbf{1.43}.
+
+\begin{lstlisting}
+max_ll <- max(log_likelihood_values)
+max_lambda <- lambda_values[log_likelihood_values == max_ll]
+print(glue("Lambda value for maximum log-likelihood is {max_lambda}"))
+\end{lstlisting}
+
+
+
 
 \bibliography{references}
 \bibliographystyle{plain}
