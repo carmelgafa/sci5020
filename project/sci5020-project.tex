@@ -63,7 +63,7 @@ The p.d.f. for an exponential distribution is:
 \end{equation}
 
 
-\noindent The expected value is by definition of the first moment:
+\noindent The first moment, or expected value:
 
 \begin{flalign*}
 E[X] &= \int_{0}^{\infty} x\space f(x) dx \\
@@ -71,7 +71,7 @@ E[X] &= \int_{0}^{\infty} x\space f(x) dx \\
 		&= \lambda \int_{0}^{\infty} x e^{- \lambda x}
 \end{flalign*}
 
-\noindent We let:
+\noindent Integrating by parts, we let:
 
 \begin{tabular}{ll}
 $u = x$ 									& $du = (1) dx$ \\
@@ -79,7 +79,7 @@ $v = -\frac{e^{- \lambda x}}{\lambda}$	& $dv =  e^{- \lambda x} dx$
 \end{tabular}
 
 \bigskip
-\noindent Integrating by parts, $\int udv = uv -\int v du$:
+\noindent As $\int udv = uv -\int v du$:
 
 \begin{flalign*}
 E[X]	&= \lambda\left( \left[ - \frac{ x e^{- \lambda x}}{\lambda} \right]_0^\infty - \int_{0}^{\infty} -\frac{e^{- \lambda x}}{\lambda} (1) dx \right)\\
