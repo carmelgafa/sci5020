@@ -11,7 +11,8 @@
 \usepackage{float}
 % colored syntax highlighting
 \usepackage{xcolor}  
-
+%captions in listings
+\usepackage{caption}
 
 %opening
 \title{Principles of statistical inference project - Part 1}
@@ -200,6 +201,27 @@ $$\hat{\sigma}^2 = \frac{1}{\hat{\lambda}^2}$$
 
 \subsection{Comment on the unbiasedness and consistency of the moment estimator for $\lambda$ derived in Q1iii.
 	State any assumption/s that need to be made to check for unbiasedness and consistency.}
+	
+	
+The moment estimator \( \hat{\lambda} \) is both unbiased and consistent.
+
+\paragraph{Unbiasedness:} The estimator \( \hat{\lambda} \) is unbiased if its expectation equals the true parameter \( \lambda \):
+
+\begin{equation}
+	E[\hat{\lambda}] = E\left[\frac{1}{\bar{X}}\right] = \lambda.
+\end{equation}
+
+Since the expectation of the sample mean \( \bar{X} \) for an exponential distribution satisfies \( E[\bar{X}] = \frac{1}{\lambda} \), applying Jensen's inequality confirms that the moment estimator is unbiased.
+
+\paragraph{Consistency:} The estimator \( \hat{\lambda} \) is consistent if its variance decreases to zero as \( n \to \infty \). The variance of \( \hat{\lambda} \) is given by:
+
+\begin{equation}
+	\text{Var}(\hat{\lambda}) = \frac{\lambda^2}{n}.
+\end{equation}
+
+Since \( \frac{\lambda^2}{n} \to 0 \) as \( n \to \infty \), it follows that \( \hat{\lambda} \) is a consistent estimator of \( \lambda \).
+
+	
 
 \subsection{Use R software to generate 1000 data points from an exponential distributed random variable using
 	any admissible parameter value for $\lambda$}
@@ -289,27 +311,27 @@ The follwoing listing calculates and plots the log-likelihood values for an expo
 
 
 \begin{lstlisting}
-	lambda_values <- seq(0.1, 5, by = 0.01)
-	log_likelihood_values <- sapply(lambda_values,
-	function(lambda) LL_exponential(lambda, x))
-	
-	df <- data.frame(lambda_values, log_likelihood_values)
-	
-	p <- ggplot(df, 
-		aes(x = lambda_values, 
-		y = log_likelihood_values)) +
-	geom_point(
-		color = "blue",
-		alpha = 0.6) +
-		labs(
-		title = "Log-Likelihood with varying
-		 lambda values",
-		x = "Lambda",
-		y = "Log-Likelihood") +
-	theme_bw()
-	
-	quartz()
-	print(p)
+lambda_values <- seq(0.1, 5, by = 0.01)
+log_likelihood_values <- sapply(lambda_values,
+function(lambda) LL_exponential(lambda, x))
+
+df <- data.frame(lambda_values, log_likelihood_values)
+
+p <- ggplot(df, 
+	aes(x = lambda_values, 
+	y = log_likelihood_values)) +
+geom_point(
+	color = "blue",
+	alpha = 0.6) +
+	labs(
+	title = "Log-Likelihood with varying
+ lambda values",
+	x = "Lambda",
+	y = "Log-Likelihood") +
+theme_bw()
+
+quartz()
+print(p)
 \end{lstlisting}
 
 \begin{figure}[H]
@@ -342,9 +364,12 @@ print(glue("Lambda value for maximum log-likelihood is {max_lambda}"))
 
 \bigskip
 
-The code that estimated the nonlinear regression is below. The plots obtained are shown in Figure \ref{fig:img-4-1}. The estimated values of a is $\hat{a} = 14.56$ and b is $\hat{b} = 7.10$
+The code in Listing \ref{lst:nls} performs nonlinear regression on the dataset. The resulting plots are presented in Figure \ref{fig:img-4-1}. The estimated parameters are $\hat{a} = 14.56$ and $\hat{b} = 7.10$.
 
-\begin{lstlisting}
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
 library(openxlsx)
 library(ggplot2)
 
@@ -386,7 +411,10 @@ x = "X", y = "Y") +
 theme_minimal()
 
 print(p)
-\end{lstlisting}
+	\end{lstlisting}
+\caption{Non linear regression code in R}
+\label{lst:nls}
+\end{figure}
 
 \begin{figure}[H]
 	\centering
@@ -402,14 +430,14 @@ print(p)
 
 
 
-The code below executes the following steps on the data.
+The code in Listing \ref{lst:jk} executes the following steps on the data to implement Jackknife resampling with non linear regression. The resulting plots are presented in Figure \ref{fig:img-4-1-1}. The estimated parameters are $\hat{a}_{jk} = 14.504$ and $\hat{b}_{jk} = 6.996$. The code executes the following steps to estimate the parameters:
 
 \begin{enumerate}
-	\item \textbf{Shuffle the dataset:} The data is randomly shuffled to remove any ordering bias:
+	\item \textbf{Shuffle the dataset:} We randomly shuffle the data to remove any ordering bias:
 
-	\item \textbf{Divide the data into $m$ Jackknife partitions:} The dataset is split into $m = 5$ partitions, each missing a unique subset of 5 elements. Note that the number of partitions was maintained as a parameter
+	\item \textbf{Divide the data into $m$ Jackknife partitions:} We split the dataset into $m = 5$ partitions, each missing a unique subset of 5 elements.
 	
-	\item \textbf{Fit the NLS model for each Jackknife sample:} A nonlinear regression model is fitted to each Jackknife sample using Nonlinear Least Squares (NLS) to estimate parameters $a$ and $b$. The model is defined as:
+	\item \textbf{Fit the NLS model for each Jackknife sample:} We fit a nonlinear regression model to each Jackknife sample using Nonlinear Least Squares (NLS) to estimate parameters $a$ and $b$. The model is defined as:
 	\begin{equation}
 		Y = \frac{aX}{b+X}
 	\end{equation}
@@ -435,23 +463,25 @@ The code below executes the following steps on the data.
 
 
 
-
-\begin{lstlisting}
-# -------------------------
-# Jackknife
-# -------------------------
-
-
-number_partitions <- 5
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+partition_size <- 5
 
 #shuffle the dataframe
 set.seed(123)
 df_shuf <- df[sample(nrow(df)), ]
 
 # Generate jackknife samples by removing each fold of 5 elements
-jackknife_samples <- lapply(1:number_partitions,
-function(a) df_shuf[-((number_partitions * (a - 1) + 1):(number_partitions * a)), ])
-
+# lapply applies a function to each element of a list
+# my list is from 1:5
+# the function will
+# for a = 1 remove element 1 to 5 (5*(1-1)+1):(5*1)
+# and so on
+# note the - sign -- I am removing the elements
+# so the return for each a is y without the elements 1 to 5, 6 to 10, etc.
+jackknife_samples <- lapply(1:partition_size,
+function(a) df_shuf[-((partition_size * (a - 1) + 1):(partition_size * a)), ])
 
 # we have calculated theta_hat_m before
 theta_hat_m <- estimated_params
@@ -461,11 +491,10 @@ theta_m_a <- function(data) {
 	data = data,
 	start = list(a = theta_hat_m["a"],
 	b = theta_hat_m["b"]))
-	return(coef(model))
-}
+	return(coef(model)) }
 
 # jackknife estimator for each partition
-nlsjk <- sapply(jackknife_samples, function(y_a) number_partitions * theta_hat_m - (number_partitions - 1) * theta_m_a(y_a))
+nlsjk <- sapply(jackknife_samples, function(y_a) partition_size * theta_hat_m - (partition_size - 1) * theta_m_a(y_a))
 
 #evaluating the jackknife estimator of the parametrs
 jackknife_estimates <- rowMeans(nlsjk)
@@ -473,9 +502,7 @@ jackknife_estimates <- rowMeans(nlsjk)
 a_hat_jk <- jackknife_estimates["a"]
 b_hat_jk <- jackknife_estimates["b"]
 
-
 df$predicted_jk <- (a_hat_jk * df$x) / (b_hat_jk + df$x)
-
 
 # Plot with Jackknife predictions and legend
 p_jk <- ggplot(df, aes(x = x, y = y)) +
@@ -483,18 +510,16 @@ geom_point(color = "blue", alpha = 0.5, size = 3) +
 geom_line(aes(y = Predicted, color = "Full Sample Prediction"),
 linewidth = 1, linetype = "dashed") +
 geom_line(aes(y = predicted_jk, color = "Jackknife Prediction"),
-linewidth = 1.2) +
+linewidth = 1) +
 labs(title = "Nonlinear Regression: Full Sample vs. Jackknife",
 x = "X", y = "Y", color = "Legend") +
 theme_minimal() +
 scale_color_manual(values = c("Full Sample Prediction" = "red",
 "Jackknife Prediction" = "green"))
-
-# Print the plot
-print(p_jk)
-
-\end{lstlisting}
-
+	\end{lstlisting}
+	\caption{Jackknife resampling code in R}
+	\label{lst:jk}
+\end{figure}
 
 The resulting plot is shown below in Figure \ref{fig:img-4-1-1}
 
@@ -505,6 +530,185 @@ The resulting plot is shown below in Figure \ref{fig:img-4-1-1}
 	\caption{Nonlinear regression fit: observed vs. predicted values including Jackknife predictions}
 	\label{fig:img-4-1-1}
 \end{figure}
+
+
+The code in Listing \ref{lst:bs} executes the following steps on the data to implement Bootstrap resampling with non linear regression. The resulting plots are presented in Figure \ref{fig:img-4-1-2}. The estimated parameters are $\hat{a}_{bs} = 14.566$ and $\hat{b}_{bs} = 7.110$. The code executes the following steps to estimate the parameters:
+
+\begin{itemize}
+	\item \textbf{Generate Bootstrap Samples:}  
+	WE create 1000 resampled datasets of size 100 by drawing with replacement from the 50 original observations.
+	
+	\item \textbf{Fit a Nonlinear Regression Model:}  
+	For each bootstrap sample, we estimate parameters $a$ and $b$ using Nonlinear Least Squares (NLS) with the model.
+	
+	\item \textbf{Compute Bootstrap Estimates:}  
+	The final bootstrap estimates are obtained by averaging the parameter estimates from all bootstrap samples:
+
+	\item \textbf{Predict Values Using Bootstrap Estimates:}  
+	Using the estimated parameters $\hat{a}_{\text{bs}}, \hat{b}_{\text{bs}}$, we compute the predicted values:
+	\begin{equation}
+		\hat{y}_{\text{bs}} = \frac{\hat{a}_{\text{bs}} x}{\hat{b}_{\text{bs}} + x}
+	\end{equation}
+	
+\end{itemize}
+
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+num_samples <- 1000
+sample_size <- 100
+
+# 1000 bootstrap samples of size 100 with replacement
+bootstrap_samples <- lapply(1:num_samples, function(i) df[sample(nrow(df), sample_size, replace = TRUE), ])
+
+fit_bootstrap_nls <- function(data) {
+	model <- nls(y ~ (a * x) / (b + x),
+	data = data,
+	start = list(a = 1, b = 1))  # Initial guesses
+	return(coef(model))
+}
+
+# Apply NLS to each bootstrap sample
+nlsbs <- lapply(bootstrap_samples, fit_bootstrap_nls)
+
+# Convert list of bootstrap estimates to a matrix
+bootstrap_estimates <- do.call(rbind, nlsbs)
+colnames(bootstrap_estimates) <- c("a", "b")
+
+# Compute mean estimates for a and b
+a_hat_bs <- mean(bootstrap_estimates[, "a"], na.rm = TRUE)
+b_hat_bs <- mean(bootstrap_estimates[, "b"], na.rm = TRUE)
+
+# Print results
+cat("Bootstrap Estimated a:", a_hat_bs, "\n")
+cat("Bootstrap Estimated b:", b_hat_bs, "\n")
+
+
+df$predicted_bs <- (a_hat_bs * df$x) / (b_hat_bs + df$x)
+
+
+# Plot with Jackknife predictions and legend
+p_bs <- ggplot(df, aes(x = x, y = y)) +
+geom_point(color = "blue", alpha = 0.5, size = 3) +
+geom_line(aes(y = Predicted, color = "Full Sample Prediction"),
+linewidth = 1, linetype = "dashed") +
+geom_line(aes(y = predicted_jk, color = "Jackknife Prediction"),
+linewidth = 1) +
+geom_line(aes(y = predicted_bs, color = "Bootstrap Prediction"),
+linewidth = 1) +
+labs(title = "Nonlinear Regression: Full Sample vs. Jackknife vs. Bootstrap",
+x = "X", y = "Y", color = "Legend") +
+theme_minimal() +
+scale_color_manual(values = c("Full Sample Prediction" = "red",
+"Jackknife Prediction" = "green",
+"Bootstrap Prediction" = "blue"))
+	\end{lstlisting}
+	\caption{Bootstrap resampling code in R}
+	\label{lst:bs}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-4-1-2}
+	\caption{Nonlinear regression fit: observed vs. predicted values including Jackknife and Bootstrap predictions}
+	\label{fig:img-4-1-2}
+\end{figure}
+
+\subsection{For the Jackknife estimator, find a 95\% confidence interval using the normal distribution and the t-distribution. For the Bootstrap estimator, find a 95\% normal, t and empirical confidence intervals.}
+
+%To estimate the uncertainty in our parameter estimates, we compute 95\% confidence intervals using the following:
+%
+%\begin{enumerate}
+%	\item \textbf{Compute the standard error (SE):}  
+%	\begin{equation}
+%		SE = \sqrt{\frac{c}{n} \sum_{i=1}^{n} (\hat{\theta}_{i} - \hat{\theta})^2}
+%	\end{equation}
+%	where:
+%	\begin{itemize}
+%		\item $\hat{\theta}_{i}$ is the estimate from the $i$-th resample.
+%		\item $\hat{\theta}$ is the mean of all estimates.
+%		\item $n$ is the number of resamples: 
+%		\begin{itemize}
+%			\item number of partitions for Jackknife
+%			\item number of resamples for Bootstrap
+%		\end{itemize}
+%		\item $c$ is a correction factor:
+%		\begin{itemize}
+%			\item For Jackknife: $c = (m-1)/m$ as bias correction is necessary
+%			\item For Bootstrap: $c = 1$  as no correction needed
+%		\end{itemize}
+%	\end{itemize}
+%	
+%	\item \textbf{Compute the 95\% confidence interval using the Normal Distribution:}
+%	\begin{equation}
+%		CI_{\text{normal}} = \hat{\theta} \pm Z_{0.975} \cdot SE
+%	\end{equation}
+%	where $Z_{0.975} = 1.96$ for a 95\% confidence level.
+%	
+%	\item \textbf{Compute the 95\% confidence interval using the t-distribution:}
+%	\begin{equation}
+%		CI_{\text{t}} = \hat{\theta} \pm t_{0.975, df} \cdot SE
+%	\end{equation}
+%	where:
+%	\begin{itemize}
+%		\item For Jackknife: $df = m - 1$
+%		\item For Bootstrap: $df = B - 1$
+%	\end{itemize}
+%	
+%	\item \textbf{Compute the 95\% confidence interval using the Empirical (Percentile) Method (Bootstrap only):}
+%	\begin{equation}
+%		CI_{\text{empirical}} = \left[ Q_{0.025}, Q_{0.975} \right]
+%	\end{equation}
+%	where $Q_{0.025}$ and $Q_{0.975}$ are the 2.5th and 97.5th percentiles of the bootstrap estimates.
+%\end{enumerate}
+%
+%\bigskip
+
+\noindent The following results were obtained for the Jackknife resampling method:
+
+\begin{itemize}
+	\item 95\% conf. interval for a using normal distribution: [ 14.14397 , 14.86412 ]
+	\item 95\% conf. interval for b using normal distribution: [ 6.356596 , 7.635241 ]
+	\item 95\% conf. interval for a using t-distribution: [ 13.99397 , 15.01412 ]
+	\item 95\% conf. interval for b using t-distribution: [ 6.090267 , 7.90157 ]
+\end{itemize}
+
+
+\noindent The following results were obtained for the Bootstrap resampling method:
+
+\begin{itemize}
+	\item conf. interval for a using normal distribution: [ 14.07722 , 15.05515 ]
+	\item conf. interval for b using normal distribution: [ 6.111358 , 8.109172 ]
+	\item conf. interval for a using t-distribution: [ 14.07663 , 15.05575 ]
+	\item conf. interval for b using t-distribution: [ 6.110146 , 8.110384 ]
+	\item conf. interval for a using empirical distribution: [ 14.08458 , 15.08578 ]
+	\item conf. interval for b using empirical distribution: [ 6.132766 , 8.113393 ]
+\end{itemize}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Method} & \textbf{Confidence Interval for $a$} & \textbf{Confidence Interval for $b$} \\
+		\hline
+		\multicolumn{3}{|c|}{\textbf{Jackknife Resampling}} \\
+		\hline
+		Normal Distribution & [14.14397, 14.86412] & [6.356596, 7.635241] \\
+		t-Distribution & [13.99397, 15.01412] & [6.090267, 7.90157] \\
+		\hline
+		\multicolumn{3}{|c|}{\textbf{Bootstrap Resampling}} \\
+		\hline
+		Normal Distribution & [14.07722, 15.05515] & [6.111358, 8.109172] \\
+		t-Distribution & [14.07663, 15.05575] & [6.110146, 8.110384] \\
+		Empirical Distribution & [14.08458, 15.08578] & [6.132766, 8.113393] \\
+		\hline
+	\end{tabular}
+	\caption{Confidence Intervals for Parameters \( a \) and \( b \) Using Jackknife and Bootstrap Methods}
+	\label{tab:ci_results}
+\end{table}
+
 
 
 \bibliography{references}
