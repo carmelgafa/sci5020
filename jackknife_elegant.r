@@ -31,7 +31,7 @@ jackknife_samples <- lapply(1:number_partitions,
 # to apply the function cv to each element of the list
 
 # i dont want to evaluate the cf of the original sample for
-#each element of the list
+# each element of the list
 # so i evaluate it once
 # let us make it more generic using theta and theta_a
 theta_hat_m <- cv(x)
