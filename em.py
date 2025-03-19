@@ -9,13 +9,13 @@ observed_indices = np.random.choice(len(X_full), size=100, replace=False)
 Y = X_full[observed_indices]  # Observed data
 
 # Define EM Algorithm to estimate mean
-def expectation_maximization(Y, n_missing, max_iters=50, tol=1e-5):
+def expectation_maximization(Y, n_missing, max_iters=1000, tol=1e-5):
     """
     Estimate mean of a normal distribution with missing data using EM.
     """
     # Step 1: Initialize mean estimate
-    # mu = np.mean(Y)  # Start with observed sample mean
-    mu = np.random.normal(loc=50, scale=10)  # Random initialization
+    mu = np.mean(Y)  # Start with observed sample mean
+    # mu = np.random.normal(loc=50, scale=10)  # Random initialization
     
     steps = 0
     
