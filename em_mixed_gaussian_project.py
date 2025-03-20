@@ -56,25 +56,25 @@ def maximization_step(data, gamma, means, standard_deviations, mixing_coefficien
     return new_means, new_standard_deviations, new_mixing_coefficients
 
 
-def simulate_thousand(means, standard_deviations, mixing_coefficients):
+def simulate_points(means, standard_deviations, mixing_coefficients, number_of_points=1000):
     '''
     Simulate 1000 data points from a mixture of Gaussians
     '''
-    
+
     data = []
 
     counts = np.zeros(len(mixing_coefficients))
     choices = np.arange(len(mixing_coefficients))
 
-    for _ in range(1000):
+    for _ in range(number_of_points):
         choice = random.choices(choices, mixing_coefficients)[0]
         counts[choice] += 1
-        data.append(random.gauss(means[choice], standard_deviations[choice]))
+        data.append(float(random.gauss(means[choice], standard_deviations[choice])))
 
     print("Counts: ", counts)
 
     plt.hist(data, bins=30, density=True, alpha=0.6, color='g')
-    x_values = np.linspace(min(data), max(data), 1000)
+    x_values = np.linspace(min(data), max(data), number_of_points)
     for idx, mix_coeff in enumerate(mixing_coefficients):
         plt.plot(
             x_values,
@@ -85,6 +85,8 @@ def simulate_thousand(means, standard_deviations, mixing_coefficients):
     plt.title(f"Simulated Data (coeff = {mixing_coefficients}, means = {means}, std = {standard_deviations})")
     plt.legend()
     plt.show()
+
+    print(data)
 
     return data
 
@@ -151,12 +153,71 @@ def main():
     plt.show()
     
     
+def initial_values_knn(data, k=3):
+    
+    centroids = np.random.choice(data, k, replace=False)
+    
+    
+    clusters = [[] for _ in range(k)]
+    print("Clusters: ", clusters)
+    
+    for _ in range(100):
+        for item in data:
+            closest_centroid = np.argmin([abs(item - c) for c in centroids])
+            clusters[closest_centroid].append(item)
+            
+        new_centroids = np.array([np.mean(cluster) if cluster else centroids[i] for i, cluster in enumerate(clusters)])
+        
+        if np.max(np.abs(new_centroids - centroids)) < 0.0001:
+            break
+            
+        centroids = new_centroids
+    
+    standard_devs = []
+    for i in range(k):
+        mean = centroids[i]
+        cluster_data = clusters[i]
+        standard_devs.append(float(np.sqrt(np.sum((cluster_data - mean) ** 2) / len(cluster_data))))
+    
+    scaling_factors = [float(1/(np.sqrt(2*np.pi)*sd)) for sd in standard_devs]
+    
+    return centroids, np.array(standard_devs), scaling_factors
 
 
 if __name__ == "__main__":
 
-    means = np.array([2,10,-3])
+    means = np.array([2,10,-5])
     standard_deviations = np.array([1,2,0.5])
     mixing_coefficients = np.array([0.3,0.3,0.4])
 
-    simulate_thousand(means, standard_deviations, mixing_coefficients)
+    data = simulate_points(means, standard_deviations, mixing_coefficients)
+    
+    
+    means, standard_deviations, mixing_coefficients = initial_values_knn(data, k=3)
+    
+    print(means)
+    print(standard_deviations)
+    print(mixing_coefficients)
+    
+    print("Initial Values: ")
+    print("means = ", means)
+    print("standard_deviations = ", standard_deviations)
+    print("mixing_coefficients: ", mixing_coefficients)
+    
+    
+    log_likelihoods = []
+    
+    for i in range(1000):
+        gamma = expectation_step(data, means, standard_deviations, mixing_coefficients)
+        means, standard_deviations, mixing_coefficients = maximization_step(data, gamma, means, standard_deviations, mixing_coefficients)
+        log_likelihoods.append(log_likelihood(data, means, standard_deviations, mixing_coefficients))
+        
+        if i>1 and log_likelihoods[-1] - log_likelihoods[-2] < 0.00001:
+            break
+        
+
+    print("Updated Values: ")
+    print("means = ", means)
+    print("standard_deviations = ", standard_deviations)
+    print("mixing_coefficients: ", mixing_coefficients)
+    print("Log likelihood: ", log_likelihoods[-1])

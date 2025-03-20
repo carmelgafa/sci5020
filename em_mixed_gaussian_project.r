@@ -1,7 +1,7 @@
 library(ggplot2)
 
 
-generate_thousands <- function(mixing_coefficients, means, standard_deviations) {
+generate_thousand <- function(mixing_coefficients, means, standard_deviations) {
 
   data <- c()
   choices_count <- rep(0, length(mixing_coefficients))
@@ -51,8 +51,8 @@ generate_thousands <- function(mixing_coefficients, means, standard_deviations) 
   print(p)
 }
 
-mixing_coefficients <- c(0.3, 0.3, 0.4)
-means <- c(2, 10, -3)
-standard_deviations <- c(1, 2, 0.5)
+mixing_coefficients <- c(0.2, 0.5, 0.3)
+means <- c(6, 0, -7)
+standard_deviations <- c(2, 1, 1.5)
 
-generate_thousands(mixing_coefficients, means, standard_deviations)
+generate_thousand(mixing_coefficients, means, standard_deviations)
