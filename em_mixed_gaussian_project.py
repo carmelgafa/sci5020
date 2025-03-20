@@ -57,37 +57,36 @@ def maximization_step(data, gamma, means, standard_deviations, mixing_coefficien
 
 
 def simulate_thousand(means, standard_deviations, mixing_coefficients):
-    data = []
+    '''
+    Simulate 1000 data points from a mixture of Gaussians
+    '''
     
+    data = []
+
     counts = np.zeros(len(mixing_coefficients))
     choices = np.arange(len(mixing_coefficients))
-    
-    for i in range(1000):
+
+    for _ in range(1000):
         choice = random.choices(choices, mixing_coefficients)[0]
-        
         counts[choice] += 1
-        
-        
-     
-        
         data.append(random.gauss(means[choice], standard_deviations[choice]))
 
     print("Counts: ", counts)
 
-
     plt.hist(data, bins=30, density=True, alpha=0.6, color='g')
     x_values = np.linspace(min(data), max(data), 1000)
-    for k in range(len(mixing_coefficients)):
-        plt.plot(x_values, mixing_coefficients[k] * norm(means[k], standard_deviations[k]).pdf(x_values), label=f'Gaussian {k+1}')
+    for idx, mix_coeff in enumerate(mixing_coefficients):
+        plt.plot(
+            x_values,
+            mix_coeff * norm(means[idx], standard_deviations[idx]).pdf(x_values),
+            label=f'Gaussian {idx+1}')
     plt.xlabel("Value")
     plt.ylabel("Probability Density")
     plt.title(f"Simulated Data (coeff = {mixing_coefficients}, means = {means}, std = {standard_deviations})")
     plt.legend()
     plt.show()
 
-
-    
-    
+    return data
 
 def main():
     data = [7.33, 9.66, 9.00, 5.00, 8.82, 10.36, 1.78, 8.42, 10.20, 7.69, 1.57, 10.85,8.66, 8.18,
@@ -156,9 +155,8 @@ def main():
 
 if __name__ == "__main__":
 
-    
     means = np.array([2,10,-3])
     standard_deviations = np.array([1,2,0.5])
     mixing_coefficients = np.array([0.3,0.3,0.4])
-    
+
     simulate_thousand(means, standard_deviations, mixing_coefficients)

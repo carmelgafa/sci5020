@@ -30,7 +30,7 @@ jackknife_samples <- lapply(1:number_partitions,
 # since jack_knife_samples is a list vectors we use sapply
 # to apply the function cv to each element of the list
 
-# i dont want to evaluate the cf of the original sample for
+# i dont want to evaluate the cv of the original sample for
 # each element of the list
 # so i evaluate it once
 # let us make it more generic using theta and theta_a
