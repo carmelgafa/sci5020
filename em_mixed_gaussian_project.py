@@ -154,13 +154,12 @@ def main():
     
     
 def initial_values_knn(data, k=3):
-    
+
     centroids = np.random.choice(data, k, replace=False)
-    
-    
+
     clusters = [[] for _ in range(k)]
     print("Clusters: ", clusters)
-    
+
     for _ in range(100):
         for item in data:
             closest_centroid = np.argmin([abs(item - c) for c in centroids])
@@ -186,7 +185,7 @@ def initial_values_knn(data, k=3):
 
 if __name__ == "__main__":
 
-    means = np.array([2,10,-5])
+    means = np.array([2,11,-5])
     standard_deviations = np.array([1,2,0.5])
     mixing_coefficients = np.array([0.3,0.3,0.4])
 

@@ -203,23 +203,23 @@ $$\hat{\sigma}^2 = \frac{1}{\hat{\lambda}^2}$$
 	State any assumption/s that need to be made to check for unbiasedness and consistency.}
 	
 	
-The moment estimator \( \hat{\lambda} \) is both unbiased and consistent.
+The moment estimator $\hat{\lambda}$ is both unbiased and consistent.
 
-\paragraph{Unbiasedness:} The estimator \( \hat{\lambda} \) is unbiased if its expectation equals the true parameter \( \lambda \):
+\paragraph{Unbiasedness:} The estimator $\hat{\lambda}$ is unbiased if its expectation equals the true parameter $\lambda$:
 
 \begin{equation}
 	E[\hat{\lambda}] = E\left[\frac{1}{\bar{X}}\right] = \lambda.
 \end{equation}
 
-Since the expectation of the sample mean \( \bar{X} \) for an exponential distribution satisfies \( E[\bar{X}] = \frac{1}{\lambda} \), applying Jensen's inequality confirms that the moment estimator is unbiased.
+Since the expectation of the sample mean $\bar{X}$ for an exponential distribution satisfies $E[\bar{X}] = \frac{1}{\lambda}$, applying Jensen's inequality confirms that the moment estimator is unbiased.
 
-\paragraph{Consistency:} The estimator \( \hat{\lambda} \) is consistent if its variance decreases to zero as \( n \to \infty \). The variance of \( \hat{\lambda} \) is given by:
+\paragraph{Consistency:} The estimator $\hat{\lambda}$ is consistent if its variance decreases to zero as $n \to \infty$. The variance of $\hat{\lambda}$ is given by:
 
 \begin{equation}
 	\text{Var}(\hat{\lambda}) = \frac{\lambda^2}{n}.
 \end{equation}
 
-Since \( \frac{\lambda^2}{n} \to 0 \) as \( n \to \infty \), it follows that \( \hat{\lambda} \) is a consistent estimator of \( \lambda \).
+Since $\frac{\lambda^2}{n} \to 0$ as $n \to \infty$, it follows that $\hat{\lambda}$ is a consistent estimator of $\lambda$.
 
 	
 
@@ -228,6 +228,7 @@ Since \( \frac{\lambda^2}{n} \to 0 \) as \( n \to \infty \), it follows that \( 
 
 The R script generates 1000 points from an exponentially distributed random variable with a rate parameter $\lambda$ of 1.5. It then plots a histogram of these points and overlays the theoretical density function of the exponential distribution. The result is shown in Figure \ref{fig:img-1-6-1}.
 
+\bigskip
 
 \begin{lstlisting}
 library(ggplot2)
@@ -705,15 +706,297 @@ scale_color_manual(values = c("Full Sample Prediction" = "red",
 		Empirical Distribution & [14.08458, 15.08578] & [6.132766, 8.113393] \\
 		\hline
 	\end{tabular}
-	\caption{Confidence Intervals for Parameters \( a \) and \( b \) Using Jackknife and Bootstrap Methods}
+	\caption{Confidence Intervals for Parameters $a$ and $b$ Using Jackknife and Bootstrap Methods}
 	\label{tab:ci_results}
 \end{table}
+
+
+\section{Question 5 – The EM Algorithm }
+
+Consider a univariate $K$-Gaussian mixture model with probability density function:
+
+$$
+f(x) = \sum_{l=1}^{K} \pi_l \phi(x, \mu_l, \sigma_l)
+$$
+
+\noindent such that $\sum_{l=1}^{K} \pi_l = 1$ and $\pi_l > 0$ for all $l$, and where $\phi(x, \mu, \sigma)$ is the Gaussian density function. The EM algorithm for this works as follows:
+
+\begin{enumerate}
+	\item Initialise $\mu_1^{(0)}, \dots, \mu_K^{(0)}, \sigma_1^{(0)}, \dots, \sigma_K^{(0)}, \pi_1^{(0)}, \dots, \pi_K^{(0)}$.
+	
+	\item Let 
+	$$
+	\gamma_n^{(j,k)} = \frac{\pi_k \phi(x_n | \mu_k^{(j-1)}, \sigma_k^{(j-1)})}{\sum_{i=1}^{K} \pi_i \phi(x_n | \mu_i^{(j-1)}, \sigma_i^{(j-1)})}.
+	$$
+	
+	\item Let
+	$$
+	\mu_k^{(J)} = \frac{1}{N_k} \sum_{n=1}^{N} \gamma_n^{(j,k)} x_n, 
+	$$
+	$$
+	\sigma_k^{(J)} = \sqrt{\frac{1}{N_k} \sum_{n=1}^{N} \gamma_n^{(j,k)} (x_n - \mu_k^{(J)})^2},
+	$$
+	and 
+	$$
+	\pi_k^{(J)} = \frac{N_{jk}}{N},
+	$$
+	where
+	$$
+	N_{jk} = \sum_{n=1}^{N} \gamma_n^{(j,k)}.
+	$$
+\end{enumerate}
+
+\subsection{Simulate 1000 readings from a mixture Gaussian distribution with 3 or more Gaussians.}
+
+The following function generalizes the code provided in the question so that an arbitrary number of samples are generated from any number of Gaussian distributions. The function also lists the number of samples selected from each Gaussian to ensure that acceptable proportions were attained for each sample and plots a distribution of the data and plots of the Gaussians.
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+library(ggplot2)
+
+generate_samples <- function(
+mixing_coefficients,
+means,
+standard_deviations,
+number_of_samples = 1000) {
+	
+	# should check that lengths are equal
+	
+	data <- c()
+	choices_count <- rep(0, length(mixing_coefficients))
+	
+	# select one of the gaussian distributions according
+	# to the mixing coefficients
+	choices <- sample(
+	x = seq_along(mixing_coefficients),
+	size = number_of_samples,
+	prob = mixing_coefficients,
+	replace = TRUE)
+	
+	# let us see that the number of selections make sense
+	for (i in 1:number_of_samples){
+		choices_count[choices[i]] <- choices_count[choices[i]] + 1
+	}
+	print(choices_count)
+	
+	# for each selection, sample from the gaussian
+	data <- c(
+	data,
+	rnorm(
+	n = number_of_samples,
+	mean = means[choices],
+	sd = standard_deviations[choices]))
+	
+	# plot histogram and gaussian curves
+	df <- data.frame(data)
+	
+	p <- ggplot(df, aes(x = data)) +
+	geom_histogram(
+	aes(y = ..density..),
+	bins = 30,
+	fill = "blue",
+	alpha = 0.6) +
+	stat_function(fun = function(x) {
+		Reduce(`+`, lapply(1:length(means), function(i) {
+			dnorm(
+			x = x,
+			mean = means[i],
+			sd = standard_deviations[i]) * mixing_coefficients[i]
+		}))
+	}, color = "red") +
+	labs(title = "Histogram of Mixture of Gaussians",
+	x = "Value",
+	y = "Density") +
+	theme_bw()
+	
+	print(p)
+}
+	\end{lstlisting}
+	\caption{Gaussian mixture sample generation code in R}
+	\label{lst:gausmix}
+\end{figure}
+
+\noindent Data from the mixed Gaussian distributions was subsequently generated using the parameters below. The plot that was obtained as a result of this process is shown in Figure \ref{fig:img-5-1}
+
+\begin{table}[h]
+	\centering
+	\renewcommand{\arraystretch}{1.2} % Adjust row height
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$\pi_1 = 0.2$ & $\mu_1 = 6$  & $\sigma_1 = 2.0$  \\
+		\hline
+		$\pi_2 = 0.5$ & $\mu_2 = 0$  & $\sigma_2 = 1.0$  \\
+		\hline
+		$\pi_3 = 0.3$ & $\mu_3 = -7$ & $\sigma_3 = 1.5$  \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+mixing_coefficients <- c(0.2, 0.5, 0.3)
+means <- c(6, 0, -7)
+standard_deviations <- c(2, 1, 1.5)
+
+generate_samples(mixing_coefficients, means, standard_deviations)			
+		\end{lstlisting}
+	\caption{Generation of data for this question}
+	\label{lst:gem-gausmix}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{img/img-5-1}
+	\caption{Distribution of generated data}
+	\label{fig:img-5-1}
+\end{figure}
+
+
+\subsection{Determine initial values $\mu_1^{(0)}, \dots, \mu_K^{(0)}, \sigma_1^{(0)}, \dots, \sigma_K^{(0)}, \pi_1^{(0)}, \dots, \pi_K^{(0)}$ 	using a K-means clustering approach or otherwise.
+}
+
+The function in Listing \ref{lst:kmeans} is a custom implementation of a k-means algorithm to initialize parameters($\mu^{(0)}$, $\sigma^{(0)}$, and $\pi^{(0)}$) for a Gaussian mixture model. Its salient features are the following:
+\begin{itemize}
+	\item After the initial centroids are randomly selected, the k-means algorithm iteratively assigns the data point to the closest centroid based on the absolute distance. The cluster centroids are then updated as the means of the points assigned to each cluster until the change in centroids is small or the threshold number of iterations is reached.
+	\item The means of each centroid is, as we have discussed above, the centroid of each cluster.
+	\item the standard deviation is calculated as follows
+	$$
+	\sigma_j =
+	\begin{cases}
+		\sqrt{\frac{1}{n_j} \sum_{x_i \in C_j} (x_i - \mu_j)^2}, & \text{if } n_j > 0 \\
+		0, & \text{otherwise}
+	\end{cases}
+	$$
+	Where:
+	\begin{itemize}
+		\item $\sigma_j$ is the standard deviation for cluster $j$,
+		\item $C_j$ is the set of points in cluster $j$,
+		\item $n_j$ is the number of points in cluster $j$,
+		\item $x_i$ are the individual data points in cluster $j$,
+		\item $\mu_j$ is the centroid (mean) of cluster $j$,
+	\end{itemize}
+	
+	\item The initial values for the mixing coefficients of the Gaussian Mixture Model are computed as:
+	
+	$$
+	\pi_j =
+	\begin{cases}
+		\frac{n_j}{N}, & \text{if } n_j > 0 \\
+		0, & \text{otherwise}
+	\end{cases}
+	$$
+	
+	Where:
+	\begin{itemize}
+		\item $\pi_j$ is the mixing coefficient for cluster $j$,
+		\item $n_j$ is the number of data points in cluster $j$,
+		\item $N$ is the total number of data points in the dataset,
+	\end{itemize}
+	
+\end{itemize}
+
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+initial_values_knn <- function(data, k = 3) {
+	set.seed(42)  # For reproducibility
+	
+	# Randomly select k initial centroids
+	centroids <- sample(x = data, size = k, replace = FALSE)
+	
+	# Initialize empty clusters
+	clusters <- vector(mode = "list", length = k)
+	
+	for (iteration in 1:100) {
+		# Reset clusters
+		clusters <- vector(mode = "list", length = k)
+		
+		# Assign each data point to the closest centroid
+		for (item in data) {
+			distances <- abs(item - centroids)
+			closest_centroid <- which.min(distances)
+			clusters[[closest_centroid]] <- c(clusters[[closest_centroid]], item)
+		}
+		
+		# Compute new centroids
+		new_centroids <- sapply(1:k, function(i) {
+			if (length(clusters[[i]]) > 0) {
+				mean(clusters[[i]])
+			} else {
+				centroids[i]  # Keep old centroid if no points are assigned
+			}
+		})
+		
+		# Check for convergence
+		if (max(abs(new_centroids - centroids)) < 0.0001) {
+			break
+		}
+		
+		centroids <- new_centroids
+	}
+	
+	# Compute standard deviations
+	clusters_standard_devs <- sapply(1:k, function(cluster_idx) {
+		if (length(clusters[[cluster_idx]]) > 0) {
+			sqrt(sum((clusters[[cluster_idx]] - centroids[cluster_idx])^2) / length(clusters[[cluster_idx]]))
+		} else {
+			0
+		}
+	})
+	
+	# Compute mixing coefficients for each cluster
+	mixing_coefficients <- sapply(1:k, function(cluster_idx) {
+		length(clusters[[cluster_idx]]) / length(data)
+	})
+	
+	return(list(
+	centroids = centroids,
+	standard_devs = clusters_standard_devs,
+	mixing_coefficients = mixing_coefficients))
+}
+		
+		\end{lstlisting}
+	\caption{k-means algorithm to compute the initial values of the mixed Gaussian model parameters}
+	\label{lst:kmeans}
+\end{figure}
+
+The results obtained from this function are as follows:
+
+\bigskip
+
+\begin{table}[h]
+	\centering
+	\renewcommand{\arraystretch}{1.2} % Adjust row height
+	\begin{tabular}{|c|c|c|}
+		\hline
+		$\pi_1 = 0.179$ & $\mu_1 = 6.353$  & $\sigma_1 = 1.685$  \\
+		\hline
+		$\pi_2 = 0.545$ & $\mu_2 = 0.104$  & $\sigma_2 = 1.107$  \\
+		\hline
+		$\pi_3 = 0.276$ & $\mu_3 = -6.942$ & $\sigma_3 = 1.508$  \\
+		\hline
+	\end{tabular}
+	\caption{Estimated parameters for the initial values of Gaussian mixture model}
+	\label{tab:gmm_parameters}
+\end{table}
+
 
 
 
 \bibliography{references}
 \bibliographystyle{plain}
 
-
-
 \end{document}
+
+%\begin{figure}[H]
+%	\captionsetup{type=lstlisting}
+%	\begin{lstlisting}
+%		
+%	\end{lstlisting}
+%	\caption{Jackknife resampling code in R}
+%	\label{lst:jk}
+%\end{figure}
+%

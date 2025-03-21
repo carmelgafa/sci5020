@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.3.31) (preloaded format=pdflatex 2024.5.24)  10 MAR 2025 06:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.3.31) (preloaded format=pdflatex 2024.5.24)  21 MAR 2025 17:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -256,20 +256,20 @@ Package caption Info: End \AtBeginDocument code.
 
 {C:/Users/carme/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2] [3] [4] 
 [5]
-<img/img-1-5-1.jpeg.pdf, id=34, 505.89pt x 505.89pt>
+<img/img-1-5-1.jpeg.pdf, id=33, 505.89pt x 505.89pt>
 File: img/img-1-5-1.jpeg.pdf Graphic file (type pdf)
 <use img/img-1-5-1.jpeg.pdf>
-Package pdftex.def Info: img/img-1-5-1.jpeg.pdf  used on input line 263.
+Package pdftex.def Info: img/img-1-5-1.jpeg.pdf  used on input line 264.
 (pdftex.def)             Requested size: 241.49895pt x 241.50444pt.
  [6 <./img/img-1-5-1.jpeg.pdf>] [7]
 <img/img-1-6-2.jpeg.pdf, id=52, 505.89pt x 505.89pt>
 File: img/img-1-6-2.jpeg.pdf Graphic file (type pdf)
 <use img/img-1-6-2.jpeg.pdf>
-Package pdftex.def Info: img/img-1-6-2.jpeg.pdf  used on input line 339.
+Package pdftex.def Info: img/img-1-6-2.jpeg.pdf  used on input line 340.
 (pdftex.def)             Requested size: 241.49895pt x 241.50444pt.
  [8 <./img/img-1-6-2.jpeg.pdf>]
 LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 
-399.
+400.
 
 (C:\Program Files\MiKTeX\tex/latex/base\ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
@@ -277,45 +277,65 @@ File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 <img/img-4-1.png, id=69, 803.0pt x 1204.5pt>
 File: img/img-4-1.png Graphic file (type png)
 <use img/img-4-1.png>
-Package pdftex.def Info: img/img-4-1.png  used on input line 421.
+Package pdftex.def Info: img/img-4-1.png  used on input line 422.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
  [10] [11 <./img/img-4-1.png>] [12]
 <img/img-4-1-1.png, id=81, 803.0pt x 1204.5pt>
 File: img/img-4-1-1.png Graphic file (type png)
 <use img/img-4-1-1.png>
-Package pdftex.def Info: img/img-4-1-1.png  used on input line 529.
+Package pdftex.def Info: img/img-4-1-1.png  used on input line 530.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
  [13] [14 <./img/img-4-1-1.png>] [15]
 <img/img-4-1-2.png, id=93, 803.0pt x 1204.5pt>
 File: img/img-4-1-2.png Graphic file (type png)
 <use img/img-4-1-2.png>
-Package pdftex.def Info: img/img-4-1-2.png  used on input line 614.
+Package pdftex.def Info: img/img-4-1-2.png  used on input line 615.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
  [16]
-Overfull \hbox (24.07228pt too wide) in paragraph at lines 619--619
+Overfull \hbox (24.07228pt too wide) in paragraph at lines 620--620
 \OT1/cmr/bx/n/12 ter-val us-ing the nor-mal dis-tri-bu-tion and the t-distribut
 ion.
  []
 
 [17 <./img/img-4-1-2.png>]
-Overfull \hbox (40.95435pt too wide) in paragraph at lines 692--708
+Overfull \hbox (40.95435pt too wide) in paragraph at lines 693--709
  [][] 
  []
 
-(sci5020-project.bbl) [18] (sci5020-project.aux)
+[18] [19]
+Overfull \vbox (65.19905pt too high) has occurred while \output is active []
+
+
+[20]
+<img/img-5-1.png, id=111, 803.0pt x 1204.5pt>
+File: img/img-5-1.png Graphic file (type png)
+<use img/img-5-1.png>
+Package pdftex.def Info: img/img-5-1.png  used on input line 851.
+(pdftex.def)             Requested size: 172.5pt x 258.7419pt.
+
+Overfull \hbox (27.02586pt too wide) in paragraph at lines 858--858
+[]\OT1/cmr/bx/n/12 Determine ini-tial val-ues $\OML/cmm/m/it/12 ^^V[]; [] ; ^^V
+[]; ^^[[]; [] ; ^^[[]; ^^Y[]; [] ; ^^Y[]$
+ []
+
+[21 <./img/img-5-1.png>] [22]
+Overfull \vbox (77.19905pt too high) has occurred while \output is active []
+
+
+[23] (sci5020-project.bbl) [24] (sci5020-project.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-03-14>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5814 strings out of 474424
- 90577 string characters out of 5751554
+ 5834 strings out of 474424
+ 90968 string characters out of 5751554
  2133496 words of memory out of 5000000
- 28129 multiletter control sequences out of 15000+600000
+ 28149 multiletter control sequences out of 15000+600000
  566006 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,11n,65p,612b,1625s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,11n,65p,612b,1627s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\carme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt
 0800.pk> <C:\Users\carme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
 0\tcrm1000.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pf
@@ -326,18 +346,19 @@ X/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type
 /amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm
 /cmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><
 C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Fi
-les/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmr5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C
-:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Fi
-les/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmtt8.pfb>
-Output written on sci5020-project.pdf (18 pages, 436535 bytes).
+les/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr17.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><
+C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Fil
+es/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX/font
+s/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+<C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on sci5020-project.pdf (24 pages, 486360 bytes).
 PDF statistics:
- 191 PDF objects out of 1000 (max. 8388607)
+ 222 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
