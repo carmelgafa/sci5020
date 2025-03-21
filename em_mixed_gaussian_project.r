@@ -231,10 +231,22 @@ for (i in 1:100) {
   iteration_result_str <- paste( "iteration: ", i)
   for (j in 1:length(centroids)) {
     iteration_result_str <- paste(iteration_result_str, " c",j,": ", format(centroids[j],3))
-
     iteration_result_str <- paste(iteration_result_str, " s",j,": ", format(standard_devs[j],3))
-
     iteration_result_str <- paste(iteration_result_str, " m",j,": ", format(mixing_coefficients[j],3))
   }
+  iteration_result_str <- paste(iteration_result_str, " ll: ", format(ll,3))
   print(iteration_result_str)
 }
+
+
+# plot ll as a line plot
+df <- data.frame(log_likelihoods)
+
+p = ggplot(df, aes(x = 1:nrow(df), y = log_likelihoods)) +
+  geom_line(color="blue", alpha=0.6) +
+  labs(title = "Log-Likelihood over iterations",
+       x = "Iterations",
+       y = "Log-Likelihood") +
+  theme_bw()
+
+print(p)

@@ -13,6 +13,10 @@
 \usepackage{xcolor}  
 %captions in listings
 \usepackage{caption}
+% multirows in tables
+\usepackage{multirow}
+
+
 
 %opening
 \title{Principles of statistical inference project - Part 1}
@@ -993,6 +997,78 @@ The results obtained from this function are as follows:
 }
 
 
+We start by examining the code created to execute this question, which is presented below in four listings.
+
+\begin{itemize}
+	\item Listing \ref{lst:em-est} contains the estimation step code that computes the responsibility of each Gaussian component for each data point as:
+	
+	$$
+	\gamma_{n,k} = \frac{\pi_k \phi(x_n | \mu_k, \sigma_k)}{\sum_{j=1}^{K} \pi_j \phi(x_n | \mu_j, \sigma_j)}
+	$$
+	
+	Where:
+	\begin{itemize}
+		\item $\gamma_{n,k}$ is the responsibility of Gaussian $k$ for data point $x_n$.
+		\item $\pi_k$ is the mixing coefficient for Gaussian $k$.
+		\item $\phi(x_n | \mu_k, \sigma_k)$ is the Gaussian probability density function:
+		$$
+		\phi(x_n | \mu_k, \sigma_k) = \frac{1}{\sigma_k \sqrt{2\pi}} \exp \left( -\frac{(x_n - \mu_k)^2}{2\sigma_k^2} \right).
+		$$
+	\end{itemize}	
+	
+	
+	\item Listing \ref{lst:em-max} illustrates the maximization step of the EM algorithm that updates the parameters as follows:
+	
+	\begin{itemize}
+		\item We update the mixing coefficients to calculate the proportion of data points that belong to a given Gaussian distribution:
+		$$
+		\pi_k^{(j)} = \frac{N_k^{(j)}}{N}
+		$$
+		Where:
+		$$
+		N_k^{(j)} = \sum_{n=1}^{N} \gamma_{n,k}^{(j)}
+		$$
+		Is the total responsibility weight assigned to Gaussian $k$?
+		
+		\item We update the means to compute the weighted mean of the data points assigned to each Gaussian:
+		$$
+		\mu_k^{(j)} = \frac{\sum_{n=1}^{N} \gamma_{n,k}^{(j)} x_n}{N_k^{(j)}}
+		$$
+		
+		\item We update the standard deviations to calculate the spread of the data points around the updated mean for each Gaussian:
+		
+		$$
+		\sigma_k^{(j)} = \sqrt{\frac{\sum_{n=1}^{N} \gamma_{n,k}^{(j)} (x_n - \mu_k^{(j)})^2}{N_k^{(j)}}}
+		$$
+	\end{itemize}
+	
+	
+	\item We then calculate the log-likelihood function for our Gaussian mixture model using the code in Listing \ref{lst:em-ll} using the suggested formulation:
+	
+	$$
+	\mathcal{L} = \sum_{n=1}^{N} \ln \left( \sum_{k=1}^{K} \pi_k \phi(x_n | \mu_k, \sigma_k) \right)
+	$$
+	
+	Where:
+	\begin{itemize}
+		\item \( \mathcal{L} \) is the log-likelihood of the data.
+		\item \( K \) is the number of Gaussian components.
+		\item \( N \) is the number of data points.
+		\item \( \pi_k \) is the mixing coefficient for Gaussian \( k \).
+		\item \( \phi(x_n | \mu_k, \sigma_k) \) is the Gaussian probability density function:
+		$$
+		\phi(x_n | \mu_k, \sigma_k) = \frac{1}{\sigma_k \sqrt{2\pi}} \exp \left( -\frac{(x_n - \mu_k)^2}{2\sigma_k^2} \right)
+		$$
+	\end{itemize}
+	
+	\item Listing \ref{lst:em-exec} shows the execution of the EM algorithm, starting from the generation of data to the estimation of the initial values and ending with the actual estimates using the EM algorithm. We notice that EM is allowed a maximum of execution 100 steps, but optimization will stop if the change in log-likelihood is smaller than $10^{-5}$.
+	
+	
+
+\end{itemize}
+
+
+
 
 \begin{figure}[H]
 	\captionsetup{type=lstlisting}
@@ -1056,27 +1132,170 @@ maximization_step <- function(data, gamma, means, standard_deviations, mixing_co
 }
 
 	\end{lstlisting}
-	\caption{Jackknife resampling code in R}
-	\label{lst:jk}
+	\caption{Maximization step code in R}
+	\label{lst:em-max}
 \end{figure}
 
 \begin{figure}[H]
 	\captionsetup{type=lstlisting}
 	\begin{lstlisting}
+log_likelihood <- function(data, means, standard_deviations, mixing_coefficients) {
+	
+	number_of_gaussians <- length(mixing_coefficients)
+	
+	# Initialize likelihood matrix
+	likelihood <- matrix(0, nrow = length(data), ncol = number_of_gaussians)
+	
+	# Compute likelihood for each Gaussian component
+	for (k in 1:number_of_gaussians) {
+		likelihood[, k] <- mixing_coefficients[k] * dnorm(data, mean = means[k], sd = standard_deviations[k])
+	}
+	
+	# Compute the log-likelihood
+	log_likelihood_value <- sum(log(rowSums(likelihood)))
+	
+	return(log_likelihood_value)
+}
 			
 		\end{lstlisting}
-	\caption{Jackknife resampling code in R}
-	\label{lst:jk}
+	\caption{Log-likelihood code in R}
+	\label{lst:em-ll}
 \end{figure}
 
 \begin{figure}[H]
 	\captionsetup{type=lstlisting}
 	\begin{lstlisting}
-			
+mixing_coefficients <- c(0.2, 0.5, 0.3)
+means <- c(6, 0, -7)
+standard_deviations <- c(2, 1, 1.5)
+
+# generate the data
+data <- generate_samples(mixing_coefficients, means, standard_deviations)
+
+# initial values
+kmeans_ret <- initial_values_kmeans(data)
+
+centroids <- kmeans_ret$centroids
+standard_devs <- kmeans_ret$standard_devs
+mixing_coefficients <- kmeans_ret$mixing_coefficients
+
+print("initial values")
+print(centroids)
+print(standard_devs)
+print(mixing_coefficients)
+
+log_likelihoods <- c()
+for (i in 1:100) {
+	gamma <- expectation_step(data, centroids, standard_devs, mixing_coefficients)
+	
+	max_ret <- maximization_step(data, gamma, centroids, standard_devs, mixing_coefficients)
+	
+	centroids <- max_ret$means
+	standard_devs <- max_ret$standard_devs
+	mixing_coefficients <- max_ret$mixing_coefficients 
+	
+	ll <- log_likelihood(data, means, standard_devs, mixing_coefficients)
+	
+	log_likelihoods <- c(log_likelihoods, ll)
+	
+	if (i>2 &&  abs(ll - log_likelihoods[i-1]) < 1e-5) {
+		print("converged")
+		break
+	}
+	# form string
+	iteration_result_str <- paste( "iteration: ", i)
+	for (j in 1:length(centroids)) {
+		iteration_result_str <- paste(iteration_result_str, " c",j,": ", format(centroids[j],3))
+		iteration_result_str <- paste(iteration_result_str, " s",j,": ", format(standard_devs[j],3))
+		iteration_result_str <- paste(iteration_result_str, " m",j,": ", format(mixing_coefficients[j],3))
+	}
+	print(iteration_result_str)
+}			
 		\end{lstlisting}
-	\caption{Jackknife resampling code in R}
-	\label{lst:jk}
+	\caption{Execution code for this question}
+\label{lst:em-exec}
 \end{figure}
+
+
+\noindent The parameters obtained after each iteration are shown in Table \ref{tab:gmm_iterations_3dp}. The algorithm converged after 28 iterations. A plot of the log likelihood at each iteration can be observed in Figure \ref{fig:img-5-3}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline
+		Step & $\pi_1$ & $\sigma_1$ & $\mu_1$ & $\pi_2$ & $\sigma_2$ & $\mu_2$ & $\pi_3$ & $\sigma_3$ & $\mu_3$ & $\mathcal{L}$ \\
+		\hline
+		1  & 6.259  & 1.780  & 0.183  & 0.088  & 1.101  & 0.541  & -6.936  & 1.519  & 0.276  & -2666.447 \\
+		2  & 6.208  & 1.824  & 0.186  & 0.078  & 1.090  & 0.538  & -6.935  & 1.520  & 0.276  & -2665.715 \\
+		3  & 6.176  & 1.850  & 0.187  & 0.071  & 1.084  & 0.537  & -6.935  & 1.521  & 0.276  & -2665.371 \\
+		4  & 6.155  & 1.868  & 0.188  & 0.067  & 1.079  & 0.536  & -6.934  & 1.521  & 0.276  & -2665.192 \\
+		5  & 6.142  & 1.880  & 0.189  & 0.065  & 1.077  & 0.535  & -6.934  & 1.521  & 0.276  & -2665.092 \\
+		6  & 6.132  & 1.888  & 0.189  & 0.063  & 1.075  & 0.534  & -6.934  & 1.522  & 0.276  & -2665.033 \\
+		7  & 6.126  & 1.893  & 0.189  & 0.062  & 1.074  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.996 \\
+		8  & 6.122  & 1.897  & 0.190  & 0.061  & 1.073  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.973 \\
+		9  & 6.119  & 1.900  & 0.190  & 0.061  & 1.073  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.958 \\
+		10 & 6.117  & 1.901  & 0.190  & 0.061  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.947 \\
+		11 & 6.115  & 1.903  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.941 \\
+		12 & 6.114  & 1.903  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.936 \\
+		13 & 6.114  & 1.904  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.933 \\
+		14 & 6.113  & 1.904  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.931 \\
+		15 & 6.113  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.929 \\
+		16 & 6.113  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.928 \\
+		17 & 6.113  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.928 \\
+		18 & 6.113  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.927 \\
+		19 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.927 \\
+		20 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.927 \\
+		21 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		22 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		23 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		24 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		25 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		26 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		27 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		28 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
+		\hline
+	\end{tabular}
+	\caption{EM iterations results table}
+	\label{tab:gmm_iterations_3dp}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-5-3}
+	\caption{Log-likelihood vs iterations for the execution of the EM algorithm until convergence}
+	\label{fig:img-5-3}
+\end{figure}
+
+\subsection{Give the final estimated $\mu_k$'s, $\sigma_k$'s and $\pi_k$'s. How do these compare with the coefficients you chose in the simulation?
+}
+
+
+The final estimated values compared to the chosen ones are listed in Table \ref{tab:gmm_chosen_vs_estimated_full}. The estimated values are very close to the initially chosen values, confirming that the initial assumptions were reasonable. The final log-likelihood value of -2664.926 indicates that the EM algorithm successfully converged to a stable solution. The minor parameter adjustments demonstrate that the algorithm effectively fine-tuned the initial estimates based on the data. The estimated values align closely with the assumed mixture structure, validating the underlying data distribution. Minor shifts in mixing coefficients, means, and standard deviations suggest that while the clusters generally adhered to the expected patterns, some exhibited slightly different densities than initially assumed. The successful convergence of the model indicates that the algorithm reached a local maximum of the likelihood function, further confirming the robustness of the estimation process.
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		Distribution & Parameter & Chosen Value & Estimated Value \\
+		\hline
+		\multirow{3}{*}{Distribution 1} & $\pi_1$ & 0.200000 & 0.1901318 \\
+		& $\mu_1$ & 6.000000 & 6.112331 \\
+		& $\sigma_1$ & 2.000000 & 1.905292 \\
+		\hline
+		\multirow{3}{*}{Distribution 2} & $\pi_2$ & 0.500000 & 0.5335142 \\
+		& $\mu_2$ & 0.000000 & 0.05972212 \\
+		& $\sigma_2$ & 1.000000 & 1.071750 \\
+		\hline
+		\multirow{3}{*}{Distribution 3} & $\pi_3$ & 0.300000 & 0.276354 \\
+		& $\mu_3$ & -7.000000 & -6.933639 \\
+		& $\sigma_3$ & 1.500000 & 1.521854 \\
+		\hline
+	\end{tabular}
+	\caption{Chosen vs. estimated parameters}
+	\label{tab:gmm_chosen_vs_estimated_full}
+\end{table}
 
 
 
