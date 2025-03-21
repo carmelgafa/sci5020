@@ -983,6 +983,14 @@ The results obtained from this function are as follows:
 	\label{tab:gmm_parameters}
 \end{table}
 
+\subsection{Run the EM algorithm for a number of iterations. Print 
+	$\mu_1^{(j)}, \dots, \mu_k^{(j)}, \sigma_1^{(j)}, \dots, \sigma_k^{(j)}, \pi_1^{(j)}, \dots, \pi_k^{(j)}$ 
+	for each iteration, and also the log-likelihood, which is given by:
+	$
+	\sum_{n=1}^{N} \ln \left( \sum_{l=1}^{K} \phi(x_i | \mu_l^{(j)}, \sigma_l^{(j)}) \right).
+	$
+	Determine when to stop the EM algorithm, either via a maximum number of iterations or through a convergence criterion. However, ensure that the EM algorithm has converged. Plot the trajectory of the estimates and the likelihood by iteration to illustrate this.
+}
 
 
 

@@ -199,7 +199,6 @@ data <- generate_samples(mixing_coefficients, means, standard_deviations)
 # initial values
 kmeans_ret <- initial_values_kmeans(data)
 
-
 centroids <- kmeans_ret$centroids
 standard_devs <- kmeans_ret$standard_devs
 mixing_coefficients <- kmeans_ret$mixing_coefficients
@@ -208,7 +207,6 @@ print("initial values")
 print(centroids)
 print(standard_devs)
 print(mixing_coefficients)
-
 
 log_likelihoods <- c()
 for (i in 1:100) {
@@ -232,16 +230,11 @@ for (i in 1:100) {
   # form string
   iteration_result_str <- paste( "iteration: ", i)
   for (j in 1:length(centroids)) {
-    iteration_result_str <- paste(iteration_result_str, " centroid: ", centroids[j])
-  }
-  for (j in 1:length(standard_devs)) {
-    iteration_result_str <- paste(iteration_result_str, " standard_dev: ", standard_devs[j])
-  }
-  for (j in 1:length(mixing_coefficients)) {
-    iteration_result_str <- paste(iteration_result_str, " mixing_coefficient: ", mixing_coefficients[j])
+    iteration_result_str <- paste(iteration_result_str, " c",j,": ", format(centroids[j],3))
+
+    iteration_result_str <- paste(iteration_result_str, " s",j,": ", format(standard_devs[j],3))
+
+    iteration_result_str <- paste(iteration_result_str, " m",j,": ", format(mixing_coefficients[j],3))
   }
   print(iteration_result_str)
-
 }
-
-
