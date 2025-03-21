@@ -118,6 +118,77 @@ initial_values_kmeans <- function(data, k = 3) {
 }
 
 
+log_likelihood <- function(data, means, standard_deviations, mixing_coefficients) {
+
+  number_of_gaussians <- length(mixing_coefficients)
+
+  # Initialize likelihood matrix
+  likelihood <- matrix(0, nrow = length(data), ncol = number_of_gaussians)
+
+  # Compute likelihood for each Gaussian component
+  for (k in 1:number_of_gaussians) {
+    likelihood[, k] <- mixing_coefficients[k] * dnorm(data, mean = means[k], sd = standard_deviations[k])
+  }
+
+  # Compute the log-likelihood
+  log_likelihood_value <- sum(log(rowSums(likelihood)))
+
+  return(log_likelihood_value)
+}
+
+
+expectation_step <- function(data, means, standard_deviations, mixing_coefficients) {
+
+  number_of_gaussians <- length(mixing_coefficients)
+
+  # Initialize gamma matrix
+  gamma <- matrix(0, nrow = length(data), ncol = number_of_gaussians)
+
+  # Calculate denominator (total probability for each data point)
+  den_total <- 0
+  for (k in 1:number_of_gaussians) {
+    den_total <- den_total + mixing_coefficients[k] * dnorm(data, mean = means[k], sd = standard_deviations[k])
+  }
+
+  # Calculate numerator and compute gamma
+  for (k in 1:number_of_gaussians) {
+    gamma[, k] <- (mixing_coefficients[k] * dnorm(data, mean = means[k], sd = standard_deviations[k])) / den_total
+  }
+
+  return(gamma)
+}
+
+
+maximization_step <- function(data, gamma, means, standard_deviations, mixing_coefficients) {
+
+  no_gaussians <- length(mixing_coefficients)
+  m <- length(data)
+
+  # Compute cluster responsibilities
+  m_c <- colSums(gamma)  # Sum of responsibilities for each Gaussian
+
+  # Compute new mixing coefficients
+  new_mixing_coefficients <- m_c / m
+
+  # Initialize new means and standard deviations
+  new_means <- numeric(no_gaussians)
+  new_standard_deviations <- numeric(no_gaussians)
+
+  # Compute new means and standard deviations for each Gaussian
+  for (k in 1:no_gaussians) {
+    new_means[k] <- sum(gamma[, k] * data) / m_c[k]
+    new_standard_deviations[k] <- sqrt(sum(gamma[, k] * (data - means[k])^2) / m_c[k])
+  }
+
+  return(list(
+    means = new_means,
+    standard_devs = new_standard_deviations,
+    mixing_coefficients = new_mixing_coefficients
+  ))
+}
+
+
+
 mixing_coefficients <- c(0.2, 0.5, 0.3)
 means <- c(6, 0, -7)
 standard_deviations <- c(2, 1, 1.5)
@@ -126,8 +197,51 @@ standard_deviations <- c(2, 1, 1.5)
 data <- generate_samples(mixing_coefficients, means, standard_deviations)
 
 # initial values
-ret <- initial_values_kmeans(data)
+kmeans_ret <- initial_values_kmeans(data)
 
-print(ret$centroids)
-print(ret$standard_devs)
-print(ret$mixing_coefficients)
+
+centroids <- kmeans_ret$centroids
+standard_devs <- kmeans_ret$standard_devs
+mixing_coefficients <- kmeans_ret$mixing_coefficients
+
+print("initial values")
+print(centroids)
+print(standard_devs)
+print(mixing_coefficients)
+
+
+log_likelihoods <- c()
+for (i in 1:100) {
+  gamma <- expectation_step(data, centroids, standard_devs, mixing_coefficients)
+
+  max_ret <- maximization_step(data, gamma, centroids, standard_devs, mixing_coefficients)
+
+  centroids <- max_ret$means
+  standard_devs <- max_ret$standard_devs
+  mixing_coefficients <- max_ret$mixing_coefficients 
+
+  ll <- log_likelihood(data, means, standard_devs, mixing_coefficients)
+
+  log_likelihoods <- c(log_likelihoods, ll)
+
+  if (i>2 &&  abs(ll - log_likelihoods[i-1]) < 1e-5) {
+    print("converged")
+    break
+  }
+
+  # form string
+  iteration_result_str <- paste( "iteration: ", i)
+  for (j in 1:length(centroids)) {
+    iteration_result_str <- paste(iteration_result_str, " centroid: ", centroids[j])
+  }
+  for (j in 1:length(standard_devs)) {
+    iteration_result_str <- paste(iteration_result_str, " standard_dev: ", standard_devs[j])
+  }
+  for (j in 1:length(mixing_coefficients)) {
+    iteration_result_str <- paste(iteration_result_str, " mixing_coefficient: ", mixing_coefficients[j])
+  }
+  print(iteration_result_str)
+
+}
+
+

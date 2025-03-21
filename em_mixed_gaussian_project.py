@@ -11,9 +11,10 @@ def log_likelihood(data, means, standard_deviations, mixing_coefficients):
     likelihood = np.zeros((len(data), number_of_gaussians), dtype=float)
 
     for k in range(number_of_gaussians):
-        likelihood[:, k] =  mixing_coefficients[k] * norm(means[k], standard_deviations[k]).pdf(data)
+        likelihood[:, k] =  norm(means[k], standard_deviations[k]).pdf(data)
 
     log_likelihood = np.sum(np.log(np.sum(likelihood, axis=1)))
+    print("log_likelihood: ", log_likelihood)
     
     return log_likelihood
 
@@ -85,8 +86,6 @@ def simulate_points(means, standard_deviations, mixing_coefficients, number_of_p
     plt.title(f"Simulated Data (coeff = {mixing_coefficients}, means = {means}, std = {standard_deviations})")
     plt.legend()
     plt.show()
-
-    print(data)
 
     return data
 
