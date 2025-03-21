@@ -994,6 +994,92 @@ The results obtained from this function are as follows:
 
 
 
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+expectation_step <- function(data, means, standard_deviations, mixing_coefficients) {
+	
+	number_of_gaussians <- length(mixing_coefficients)
+	
+	# Initialize gamma matrix
+	gamma <- matrix(0, nrow = length(data), ncol = number_of_gaussians)
+	
+	# Calculate denominator (total probability for each data point)
+	den_total <- 0
+	for (k in 1:number_of_gaussians) {
+		den_total <- den_total + mixing_coefficients[k] * dnorm(data, mean = means[k], sd = standard_deviations[k])
+	}
+	
+	# Calculate numerator and compute gamma
+	for (k in 1:number_of_gaussians) {
+		gamma[, k] <- (mixing_coefficients[k] * dnorm(data, mean = means[k], sd = standard_deviations[k])) / den_total
+	}
+	
+	return(gamma)
+}			
+		\end{lstlisting}
+	\caption{Estimation step code in R}
+	\label{lst:em-est}
+\end{figure}
+
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+
+maximization_step <- function(data, gamma, means, standard_deviations, mixing_coefficients) {
+	
+	no_gaussians <- length(mixing_coefficients)
+	m <- length(data)
+	
+	# Compute cluster responsibilities
+	m_c <- colSums(gamma)  # Sum of responsibilities for each Gaussian
+	
+	# Compute new mixing coefficients
+	new_mixing_coefficients <- m_c / m
+	
+	# Initialize new means and standard deviations
+	new_means <- numeric(no_gaussians)
+	new_standard_deviations <- numeric(no_gaussians)
+	
+	# Compute new means and standard deviations for each Gaussian
+	for (k in 1:no_gaussians) {
+		new_means[k] <- sum(gamma[, k] * data) / m_c[k]
+		new_standard_deviations[k] <- sqrt(sum(gamma[, k] * (data - means[k])^2) / m_c[k])
+	}
+	
+	return(list(
+	means = new_means,
+	standard_devs = new_standard_deviations,
+	mixing_coefficients = new_mixing_coefficients
+	))
+}
+
+	\end{lstlisting}
+	\caption{Jackknife resampling code in R}
+	\label{lst:jk}
+\end{figure}
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+			
+		\end{lstlisting}
+	\caption{Jackknife resampling code in R}
+	\label{lst:jk}
+\end{figure}
+
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+			
+		\end{lstlisting}
+	\caption{Jackknife resampling code in R}
+	\label{lst:jk}
+\end{figure}
+
+
+
 \bibliography{references}
 \bibliographystyle{plain}
 
