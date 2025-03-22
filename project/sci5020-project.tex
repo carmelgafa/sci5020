@@ -21,6 +21,7 @@
 %opening
 \title{Principles of statistical inference project - Part 1}
 \author{Carmel Gafa'}
+\date{}
 
 \begin{document}
 
@@ -357,11 +358,45 @@ max_lambda <- lambda_values[log_likelihood_values == max_ll]
 print(glue("Lambda value for maximum log-likelihood is {max_lambda}"))
 \end{lstlisting}
 
+%------------------------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------------------------
+
+\section{Question 2}
+
+Suppose that we wish to estimate the parameters of the model:
+
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3}^3 + \varepsilon_i
+$$
+
+\noindent given a sample of size \( n \).
+
+\subsection{State the type of estimator that needs to be used in this situation and mention two properties of this estimator.}
+
+\subsection{Derive the equations that need to be solved to obtain the required estimates.}
+
+\subsection{ Generate or source a dataset for which you would use this type of model and fit the model to the data.  Present a plot of the fitted model to the data.  Comment on the goodness of fit of the model to the data.  The R code used for this question should be presented together with the answers. Proper referencing should be provided in the text if the data is sourced.}
+
+%------------------------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------------------------
 
 
-\section{title}
+\section{Question 3}
 
-\section{title}
+Let \( x_1, \dots, x_n \) be a random sample selected from a population with a distribution of your choice. [This distribution needs to be different from those used in the lecture notes].
+
+\subsection{Derive the maximum likelihood estimator/s of the parameters of the chosen distribution.}
+
+\subsection{Find the Cramer-Rao lower bound for the maximum likelihood estimator/s obtained in Q3i).}
+
+\subsection{Does/do the ML estimator/s obtained in Q3i) attain the Cramer-Rao lower bound?  Give a reason for your answer. }
+
+\subsection{Is/are the ML estimator/s obtained in Q3i) a sufficient statistic for the population parameter/s?  Give a reason for your answer.}
+
+\subsection{Why are maximum likelihood estimators considered to be desirable estimators?  Mention one situation where a maximum likelihood estimator might not be optimal.   }
+
+%------------------------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------------------------
 
 \section{Question 4 - Jackknife and bootstrap}
 
@@ -673,24 +708,24 @@ scale_color_manual(values = c("Full Sample Prediction" = "red",
 
 \noindent The following results were obtained for the Jackknife resampling method:
 
-\begin{itemize}
-	\item 95\% conf. interval for a using normal distribution: [ 14.14397 , 14.86412 ]
-	\item 95\% conf. interval for b using normal distribution: [ 6.356596 , 7.635241 ]
-	\item 95\% conf. interval for a using t-distribution: [ 13.99397 , 15.01412 ]
-	\item 95\% conf. interval for b using t-distribution: [ 6.090267 , 7.90157 ]
-\end{itemize}
-
-
-\noindent The following results were obtained for the Bootstrap resampling method:
-
-\begin{itemize}
-	\item conf. interval for a using normal distribution: [ 14.07722 , 15.05515 ]
-	\item conf. interval for b using normal distribution: [ 6.111358 , 8.109172 ]
-	\item conf. interval for a using t-distribution: [ 14.07663 , 15.05575 ]
-	\item conf. interval for b using t-distribution: [ 6.110146 , 8.110384 ]
-	\item conf. interval for a using empirical distribution: [ 14.08458 , 15.08578 ]
-	\item conf. interval for b using empirical distribution: [ 6.132766 , 8.113393 ]
-\end{itemize}
+%\begin{itemize}
+%	\item 95\% conf. interval for a using normal distribution: [ 14.14397 , 14.86412 ]
+%	\item 95\% conf. interval for b using normal distribution: [ 6.356596 , 7.635241 ]
+%	\item 95\% conf. interval for a using t-distribution: [ 13.99397 , 15.01412 ]
+%	\item 95\% conf. interval for b using t-distribution: [ 6.090267 , 7.90157 ]
+%\end{itemize}
+%
+%
+%\noindent The following results were obtained for the Bootstrap resampling method:
+%
+%\begin{itemize}
+%	\item conf. interval for a using normal distribution: [ 14.07722 , 15.05515 ]
+%	\item conf. interval for b using normal distribution: [ 6.111358 , 8.109172 ]
+%	\item conf. interval for a using t-distribution: [ 14.07663 , 15.05575 ]
+%	\item conf. interval for b using t-distribution: [ 6.110146 , 8.110384 ]
+%	\item conf. interval for a using empirical distribution: [ 14.08458 , 15.08578 ]
+%	\item conf. interval for b using empirical distribution: [ 6.132766 , 8.113393 ]
+%\end{itemize}
 
 \begin{table}[h]
 	\centering
@@ -713,6 +748,9 @@ scale_color_manual(values = c("Full Sample Prediction" = "red",
 	\caption{Confidence Intervals for Parameters $a$ and $b$ Using Jackknife and Bootstrap Methods}
 	\label{tab:ci_results}
 \end{table}
+
+%------------------------------------------------------------------------------------------------------------------------
+%------------------------------------------------------------------------------------------------------------------------
 
 
 \section{Question 5 – The EM Algorithm }
@@ -1222,6 +1260,7 @@ for (i in 1:100) {
 
 \begin{table}[H]
 	\centering
+	\resizebox{0.9\textwidth}{!}{
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
 		\hline
 		Step & $\pi_1$ & $\sigma_1$ & $\mu_1$ & $\pi_2$ & $\sigma_2$ & $\mu_2$ & $\pi_3$ & $\sigma_3$ & $\mu_3$ & $\mathcal{L}$ \\
@@ -1256,6 +1295,7 @@ for (i in 1:100) {
 		28 & 6.112  & 1.905  & 0.190  & 0.060  & 1.072  & 0.534  & -6.934  & 1.522  & 0.276  & -2664.926 \\
 		\hline
 	\end{tabular}
+	}
 	\caption{EM iterations results table}
 	\label{tab:gmm_iterations_3dp}
 \end{table}
