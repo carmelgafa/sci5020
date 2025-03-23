@@ -1,6 +1,7 @@
 *.aux
 *.log
-*.pdf
 *.gz
+*.blg
+*.bbl
 
 .qodo
