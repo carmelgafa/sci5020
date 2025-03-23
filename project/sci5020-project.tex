@@ -15,6 +15,9 @@
 \usepackage{caption}
 % multirows in tables
 \usepackage{multirow}
+%longtable
+\usepackage{array}
+\usepackage{longtable}
 
 
 
@@ -363,13 +366,13 @@ print(glue("Lambda value for maximum log-likelihood is {max_lambda}"))
 
 \section{Question 2}
 
-Suppose that we wish to estimate the parameters of the model:
+\textbf{Suppose that we wish to estimate the parameters of the model:}
 
 $$
 y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3}^3 + \varepsilon_i
 $$
 
-\noindent given a sample of size \( n \).
+\noindent \textbf{given a sample of size $n$}.
 
 \subsection{State the type of estimator that needs to be used in this situation and mention two properties of this estimator.}
 
@@ -377,13 +380,108 @@ $$
 
 \subsection{ Generate or source a dataset for which you would use this type of model and fit the model to the data.  Present a plot of the fitted model to the data.  Comment on the goodness of fit of the model to the data.  The R code used for this question should be presented together with the answers. Proper referencing should be provided in the text if the data is sourced.}
 
+
+
+
+
+\begin{longtable}{|p{0.4\textwidth}|p{0.6\textwidth}|}
+	\hline
+	\textbf{Regression Output} & \textbf{Explanation} \\
+	\hline
+
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Call}} \\
+	\hline
+	\texttt{lm(formula = y\_real ~ x1 + x2 + I(x3\textasciicircum3))} & 
+	Specifies a linear regression where $y$ is predicted using $x_1$, $x_2$, and $x_3^3$. The function \texttt{I(x3\textasciicircum3)} ensures $x_3$ is cubed as a transformation. \\
+	\hline
+
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Residuals}} \\
+	\hline
+	\texttt{Min = -31.031} & Smallest residual (largest over-prediction). \\
+	\hline
+	\texttt{1Q = -6.926} & First quartile (25\% of residuals are below this). \\
+	\hline
+	\texttt{Median = -0.218 }& Median residual, close to zero suggests unbiased predictions. \\
+	\hline
+	\texttt{3Q = 6.738} & Third quartile (75\% of residuals are below this). \\
+	\hline
+	\texttt{Max = 33.252} & Largest residual (largest under-prediction). \\
+	\hline
+	\texttt{residuals plot} & \parbox[c]{5cm}{\centering\includegraphics[width=4cm]{img/img_2-3-1}} \\
+	\hline
+
+	\hline	
+	\multicolumn{2}{|c|}{\textbf{Coefficients}} \\
+	\hline
+	\texttt{(Intercept)  = 5.44611} & $\hat{\beta_0}$\\
+	\hline
+	\texttt{x1  = 2.67591} & $\hat{\beta_1}$\\
+	\hline
+	\texttt{x2 = -1.41965} & $\hat{\beta_2}$\\
+	\hline
+	\texttt{I(x3\textasciicircum3) = 0.80047} & $\beta_3$\\
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Standard Errors (Precision of Estimates)}} \\
+	\hline
+	\texttt{Intercept SE} = 0.39241 & Standard error for $\beta_0$. \\
+	\hline
+	\texttt{x1 SE} = 0.09603 & Standard error for $\beta_1$. \\
+	\hline
+	\texttt{x2 SE} = 0.13976 & Standard error for $\beta_2$. \\
+	\hline
+	\texttt{I(x3\textasciicircum3) SE} = 0.00157 & Very small SE, indicating high precision. \\
+	\hline
+	\multicolumn{2}{|c|}{\textbf{t-values (Test Statistic for Significance)}} \\
+	\hline
+	\texttt{Intercept t-value} = 13.88 & Indicates the intercept is statistically significant. \\
+	\hline
+	\texttt{x1 t-value} = 27.86 & Strong evidence that $x_1$ affects $y$. \\
+	\hline
+	\texttt{x2 t-value} = -10.16 & Strong evidence that $x_2$ affects $y$. \\
+	\hline
+	\texttt{I(x3\textasciicircum3) t-value} = 509.81 & Extremely strong effect of $x_3^3$ on $y$. \\
+	\hline
+
+	\hline
+	\multicolumn{2}{|c|}{\textbf{p-values (Significance Levels)}} \\
+	\hline
+	\texttt{Intercept p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\hline
+	\texttt{x1 p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\hline
+	\texttt{x2 p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\hline
+	\texttt{I(x3\textasciicircum3) p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\hline
+
+	\hline
+	\multicolumn{2}{|c|}{\textbf{Model Fit Statistics}} \\
+	\hline
+	\texttt{Residual standard error = 9.952} & Measures average prediction error. \\
+	\hline
+	\texttt{Multiple $R^2 = 0.9976$} & Model explains 99.76\% of the variance in $y$. \\
+	\hline
+	\texttt{Adjusted $R^2 = 0.9976$} & Adjusted for the number of predictors, still very high. \\
+	\hline
+	\texttt{F-statistic = $1.391 \times 10^5$} & Tests overall model significance. \\
+	\hline
+	\texttt{Model p-value < 2.2e-16} & Overall model is highly significant. \\
+	\hline
+\end{longtable}
+	
+
+
+
+
 %------------------------------------------------------------------------------------------------------------------------
 %------------------------------------------------------------------------------------------------------------------------
 
 
 \section{Question 3}
 
-Let \( x_1, \dots, x_n \) be a random sample selected from a population with a distribution of your choice. [This distribution needs to be different from those used in the lecture notes].
+Let $x_1, \dots, x_n$ be a random sample selected from a population with a distribution of your choice. [This distribution needs to be different from those used in the lecture notes].
 
 \subsection{Derive the maximum likelihood estimator/s of the parameters of the chosen distribution.}
 
@@ -734,14 +832,14 @@ scale_color_manual(values = c("Full Sample Prediction" = "red",
 		\hline
 		\multicolumn{3}{|c|}{\textbf{Jackknife Resampling}} \\
 		\hline
-		Normal Distribution & [14.14397, 14.86412] & [6.356596, 7.635241] \\
-		t-Distribution & [13.99397, 15.01412] & [6.090267, 7.90157] \\
+		Normal Distribution & \texttt{[14.14397, 14.86412]} & \texttt{[6.356596, 7.63524]} \\
+		t-Distribution & \texttt{[13.99397, 15.01412]} & \texttt{[6.090267, 7.90157]} \\
 		\hline
 		\multicolumn{3}{|c|}{\textbf{Bootstrap Resampling}} \\
 		\hline
-		Normal Distribution & [14.07722, 15.05515] & [6.111358, 8.109172] \\
-		t-Distribution & [14.07663, 15.05575] & [6.110146, 8.110384] \\
-		Empirical Distribution & [14.08458, 15.08578] & [6.132766, 8.113393] \\
+		Normal Distribution & \texttt{[14.07722, 15.05515]} & \texttt{[6.111358, 8.109172]} \\
+		t-Distribution & \texttt{[14.07663, 15.05575]} & \texttt{[6.110146, 8.110384]} \\
+		Empirical Distribution & \texttt{[14.08458, 15.08578]} & \texttt{[6.132766, 8.113393]} \\
 		\hline
 	\end{tabular}
 	\caption{Confidence Intervals for Parameters $a$ and $b$ Using Jackknife and Bootstrap Methods}
@@ -786,6 +884,10 @@ $$
 	N_{jk} = \sum_{n=1}^{N} \gamma_n^{(j,k)}.
 	$$
 \end{enumerate}
+
+
+
+\section{Question 5 - The EM Algorithm}
 
 \subsection{Simulate 1000 readings from a mixture Gaussian distribution with 3 or more Gaussians.}
 
@@ -1088,11 +1190,11 @@ We start by examining the code created to execute this question, which is presen
 	
 	Where:
 	\begin{itemize}
-		\item \( \mathcal{L} \) is the log-likelihood of the data.
-		\item \( K \) is the number of Gaussian components.
-		\item \( N \) is the number of data points.
-		\item \( \pi_k \) is the mixing coefficient for Gaussian \( k \).
-		\item \( \phi(x_n | \mu_k, \sigma_k) \) is the Gaussian probability density function:
+		\item $\mathcal{L}$ is the log-likelihood of the data.
+		\item $K$ is the number of Gaussian components.
+		\item $N$ is the number of data points.
+		\item $\pi_k$ is the mixing coefficient for Gaussian $k$.
+		\item $\phi(x_n | \mu_k, \sigma_k)$ is the Gaussian probability density function:
 		$$
 		\phi(x_n | \mu_k, \sigma_k) = \frac{1}{\sigma_k \sqrt{2\pi}} \exp \left( -\frac{(x_n - \mu_k)^2}{2\sigma_k^2} \right)
 		$$
