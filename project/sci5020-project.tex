@@ -313,7 +313,7 @@ $$
 \subsubsection{Evaluate the log-likelihood function for the generated data as a function of $\lambda$, and plot the resulting log-likelihood function against different values of $\lambda$. Present the plot together with the answers.}
 
 
-The follwoing listing calculates and plots the log-likelihood values for an exponential distribution with varying $\lambda$ values. The resulting plot can be examined in Figure \ref{fig:img-1-6-2}
+The following listing calculates and plots the log-likelihood values for an exponential distribution with varying $\lambda$ values. The resulting plot can be examined in Figure \ref{fig:img-1-6-2}
 
 
 \begin{lstlisting}
@@ -404,7 +404,7 @@ Let \( x_1, \dots, x_n \) be a random sample selected from a population with a d
 
 \bigskip
 
-The code in Listing \ref{lst:nls} performs nonlinear regression on the dataset. The resulting plots are presented in Figure \ref{fig:img-4-1}. The estimated parameters are $\hat{a} = 14.56$ and $\hat{b} = 7.10$.
+The code in Listing \ref{lst:nls} performs non-linear regression on the dataset. The resulting plots are presented in Figure \ref{fig:img-4-1}. The estimated parameters are $\hat{a} = 14.56$ and $\hat{b} = 7.10$.
 
 
 \begin{figure}[H]
@@ -459,13 +459,12 @@ print(p)
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-4-1}
-	\caption{Nonlinear regression fit: observed vs. predicted values}
+	\caption{Non-linear regression fit: observed vs. predicted values}
 	\label{fig:img-4-1}
 \end{figure}
 
 
-\subsection{Construct a computer code in R to find the Jackknife and Bootstrap estimators of $a$ and $b$. In the 
-	case of Jackknife, section randomly the sampling into 5 partitions of size 10. In the case of 
+\subsection{Construct a computer code in R to find the Jackknife and Bootstrap estimators of $a$ and $b$. In the case of Jackknife, section randomly the sampling into 5 partitions of size 10. In the case of -
 	Bootstrap, generate 1000 samples of size 100 with replacement. }
 
 
@@ -477,7 +476,7 @@ The code in Listing \ref{lst:jk} executes the following steps on the data to imp
 
 	\item \textbf{Divide the data into $m$ Jackknife partitions:} We split the dataset into $m = 5$ partitions, each missing a unique subset of 5 elements.
 	
-	\item \textbf{Fit the NLS model for each Jackknife sample:} We fit a nonlinear regression model to each Jackknife sample using Nonlinear Least Squares (NLS) to estimate parameters $a$ and $b$. The model is defined as:
+	\item \textbf{Fit the NLS model for each Jackknife sample:} We fit a non-linear regression model to each Jackknife sample using Nonlinear Least Squares (NLS) to estimate parameters $a$ and $b$. The model is defined as:
 	\begin{equation}
 		Y = \frac{aX}{b+X}
 	\end{equation}

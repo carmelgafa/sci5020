@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.3.31) (preloaded format=pdflatex 2024.5.24)  22 MAR 2025 00:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.3.31) (preloaded format=pdflatex 2024.5.24)  22 MAR 2025 09:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -220,20 +220,20 @@ File: l3backend-pdftex.def 2024-03-14 L3 backend support: PDF output (pdfTeX)
 (sci5020-project.aux)
 \openout1 = `sci5020-project.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
 \c@lstlisting=\count287
 
 (C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
@@ -266,84 +266,84 @@ Package caption Info: End \AtBeginDocument code.
 <img/img-1-5-1.jpeg.pdf, id=33, 505.89pt x 505.89pt>
 File: img/img-1-5-1.jpeg.pdf Graphic file (type pdf)
 <use img/img-1-5-1.jpeg.pdf>
-Package pdftex.def Info: img/img-1-5-1.jpeg.pdf  used on input line 268.
+Package pdftex.def Info: img/img-1-5-1.jpeg.pdf  used on input line 269.
 (pdftex.def)             Requested size: 241.49895pt x 241.50444pt.
  [6 <./img/img-1-5-1.jpeg.pdf>] [7]
 <img/img-1-6-2.jpeg.pdf, id=52, 505.89pt x 505.89pt>
 File: img/img-1-6-2.jpeg.pdf Graphic file (type pdf)
 <use img/img-1-6-2.jpeg.pdf>
-Package pdftex.def Info: img/img-1-6-2.jpeg.pdf  used on input line 344.
+Package pdftex.def Info: img/img-1-6-2.jpeg.pdf  used on input line 345.
 (pdftex.def)             Requested size: 241.49895pt x 241.50444pt.
- [8 <./img/img-1-6-2.jpeg.pdf>]
+ [8 <./img/img-1-6-2.jpeg.pdf>] [9]
 LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 
-404.
+439.
 
 (C:\Program Files\MiKTeX\tex/latex/base\ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-) [9]
-<img/img-4-1.png, id=69, 803.0pt x 1204.5pt>
+) [10]
+<img/img-4-1.png, id=72, 803.0pt x 1204.5pt>
 File: img/img-4-1.png Graphic file (type png)
 <use img/img-4-1.png>
-Package pdftex.def Info: img/img-4-1.png  used on input line 426.
+Package pdftex.def Info: img/img-4-1.png  used on input line 461.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
- [10] [11 <./img/img-4-1.png>] [12]
-<img/img-4-1-1.png, id=81, 803.0pt x 1204.5pt>
+ [11] [12 <./img/img-4-1.png>] [13]
+<img/img-4-1-1.png, id=85, 803.0pt x 1204.5pt>
 File: img/img-4-1-1.png Graphic file (type png)
 <use img/img-4-1-1.png>
-Package pdftex.def Info: img/img-4-1-1.png  used on input line 534.
+Package pdftex.def Info: img/img-4-1-1.png  used on input line 569.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
- [13] [14 <./img/img-4-1-1.png>] [15]
-<img/img-4-1-2.png, id=93, 803.0pt x 1204.5pt>
+ [14] [15 <./img/img-4-1-1.png>] [16]
+<img/img-4-1-2.png, id=96, 803.0pt x 1204.5pt>
 File: img/img-4-1-2.png Graphic file (type png)
 <use img/img-4-1-2.png>
-Package pdftex.def Info: img/img-4-1-2.png  used on input line 619.
+Package pdftex.def Info: img/img-4-1-2.png  used on input line 654.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
- [16]
-Overfull \hbox (24.07228pt too wide) in paragraph at lines 624--624
+ [17]
+Overfull \hbox (24.07228pt too wide) in paragraph at lines 659--659
 \OT1/cmr/bx/n/12 ter-val us-ing the nor-mal dis-tri-bu-tion and the t-distribut
 ion.
  []
 
-[17 <./img/img-4-1-2.png>]
-Overfull \hbox (40.95435pt too wide) in paragraph at lines 697--713
+
+Overfull \hbox (40.95435pt too wide) in paragraph at lines 732--748
  [][] 
  []
 
-[18] [19]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[18 <./img/img-4-1-2.png>] [19] [20]
 Overfull \vbox (65.19905pt too high) has occurred while \output is active []
 
 
-[20]
-<img/img-5-1.png, id=111, 803.0pt x 1204.5pt>
+[21]
+<img/img-5-1.png, id=114, 803.0pt x 1204.5pt>
 File: img/img-5-1.png Graphic file (type png)
 <use img/img-5-1.png>
-Package pdftex.def Info: img/img-5-1.png  used on input line 855.
+Package pdftex.def Info: img/img-5-1.png  used on input line 893.
 (pdftex.def)             Requested size: 172.5pt x 258.7419pt.
 
-Overfull \hbox (27.02586pt too wide) in paragraph at lines 862--862
+Overfull \hbox (27.02586pt too wide) in paragraph at lines 900--900
 []\OT1/cmr/bx/n/12 Determine ini-tial val-ues $\OML/cmm/m/it/12 ^^V[]; [] ; ^^V
 []; ^^[[]; [] ; ^^[[]; ^^Y[]; [] ; ^^Y[]$
  []
 
-[21 <./img/img-5-1.png>] [22]
+[22 <./img/img-5-1.png>] [23]
 Overfull \vbox (77.19905pt too high) has occurred while \output is active []
 
 
-[23] [24] [25] [26] [27] [28]
+[24] [25] [26] [27] [28] [29]
 Overfull \vbox (17.69913pt too high) has occurred while \output is active []
 
 
-[29]
-Overfull \hbox (60.68976pt too wide) in paragraph at lines 1225--1259
- [][] 
- []
-
-<img/img-5-3.png, id=143, 803.0pt x 1204.5pt>
+[30]
+<img/img-5-3.png, id=146, 803.0pt x 1204.5pt>
 File: img/img-5-3.png Graphic file (type png)
 <use img/img-5-3.png>
-Package pdftex.def Info: img/img-5-3.png  used on input line 1265.
+Package pdftex.def Info: img/img-5-3.png  used on input line 1305.
 (pdftex.def)             Requested size: 241.49895pt x 362.25337pt.
-[30] [31 <./img/img-5-3.png>] (sci5020-project.bbl) [32] (sci5020-project.aux)
+ [31] [32 <./img/img-5-3.png>] (sci5020-project.bbl) [33]
+(sci5020-project.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-03-14>
@@ -377,9 +377,9 @@ s/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/publ
 ic/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/c
 m/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
 <C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on sci5020-project.pdf (32 pages, 522547 bytes).
+Output written on sci5020-project.pdf (33 pages, 523690 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
+ 253 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
