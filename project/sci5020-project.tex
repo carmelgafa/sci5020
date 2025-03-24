@@ -376,17 +376,211 @@ $$
 
 \subsection{State the type of estimator that needs to be used in this situation and mention two properties of this estimator.}
 
+The appropriate estimator for the given regression model:
+
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3}^3 + \varepsilon_i
+$$
+
+
+is the Ordinary Least Squares (OLS) Estimator. This estimator is used because it is linear in parameters, even though $x_3^3$introduces a nonlinear transformation. In addition, OLS minimizes the sum of squared residuals to obtain the best fit for the parameters. Properties of the OLS estimator include:
+
+\begin{itemize}
+	\item Unbiasedness. The OLS estimator is unbiased, meaning its expected value equals the true parameter value; $E[\hat{\beta}] = \beta$.
+	\item Best Linear Unbiased Estimator. OLS provides the lowest variance among all linear unbiased estimators, making OLS the most efficient estimator when errors have constant variance (homoscedasticity).
+\end{itemize}
+
+
+
 \subsection{Derive the equations that need to be solved to obtain the required estimates.}
+
+
+\noindent For the given model:
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3}^3 + \varepsilon_i
+$$
+
+\noindent The sum os squared residuals will be minimized using ordinary least squares.
+
+$$
+S = \sum_{i=1}^{n} (\varepsilon_i = \sum_{i-1}^{n} y_i - \beta_0 - \beta_1 x_{i1} - \beta_2 x_{i2} - \beta_3 x_{i3}^3)
+$$
+
+\noindent Our aim is to find $$\arg \max_{\beta_0, \beta_1, \beta_2, \beta_3} S$$ 
+
+\noindent by equating 
+$$ 
+\frac{\partial S}{\partial \beta_0} = 0, 
+\frac{\partial S}{\partial \beta_1} = 0, 
+\frac{\partial S}{\partial \beta_2} = 0, 
+\frac{\partial S}{\partial \beta_3} = 0
+$$
+
+\noindent that is,
+
+\begin{flalign*}
+\frac{\partial S}{\partial \beta_0} =& 2 \sum_{i=1}^{n} (\varepsilon_i = \sum_{i-1}^{n} y_i - \beta_0 - \beta_1 x_{i1} - \beta_2 x_{i2} - \beta_3 x_{i3}^3) = 0 \\
+\frac{\partial S}{\partial \beta_1} =& \sum_{i=1}^{n} (\varepsilon_i = \sum_{i-1}^{n} y_i - \beta_0 - \beta_1 x_{i1} - \beta_2 x_{i2} - \beta_3 x_{i3}^3) (-x_{i1} )= 0 \\
+\frac{\partial S}{\partial \beta_2} =& \sum_{i=1}^{n} (\varepsilon_i = \sum_{i-1}^{n} y_i - \beta_0 - \beta_1 x_{i1} - \beta_2 x_{i2} - \beta_3 x_{i3}^3)(-x_{i2}) = 0 \\
+\frac{\partial S}{\partial \beta_3} =& \sum_{i=1}^{n} (\varepsilon_i = \sum_{i-1}^{n} y_i - \beta_0 - \beta_1 x_{i1} - \beta_2 x_{i2} - \beta_3 x_{i3}^3) (-x_{i3}^3) = 0 
+\end{flalign*}	
+
+\noindent rearranging,
+
+\begin{flalign*}
+	\sum_{i=1}^{n}y_i =& n \beta_0 +\beta_1 \sum_{i=1}^{n} x_{i1} + \beta_2 \sum_{i=1}^{n} x_{i2} + \beta_3 \sum_{i=1}^{n} x_{i_3}^3 \\
+	\sum_{i=1}^{n}y_ix_{i1} =& \beta_0 \sum_{i=1}^{n} x_{i1}  +\beta_1 \sum_{i=1}^{n} x_{i1}^2 + \beta_2 \sum_{i=1}^{n} x_{i2}x_{i1} + \beta_3 \sum_{i=1}^{n} x_{i_3}^3x_{i1} \\
+	\sum_{i=1}^{n}y_ix_{i2} =& \beta_0 \sum_{i=1}^{n} x_{i2}  +\beta_1 \sum_{i=1}^{n} x_{i1}x_{i2} + \beta_2 \sum_{i=1}^{n} x_{i2}^2 + \beta_3 \sum_{i=1}^{n} x_{i_3}^3x_{i2} \\
+	\sum_{i=1}^{n}y_ix_{i_3}^3 =& \beta_0\sum_{i=1}^{n} x_{i_3}^3 +\beta_1 \sum_{i=1}^{n} x_{i1}x_{i_3}^3 + \beta_2 \sum_{i=1}^{n} x_{i2}x_{i_3}^3 + \beta_3 \sum_{i=1}^{n} x_{i_3}^6
+\end{flalign*}
+
+
+\noindent that can be written in matrix form as follows:
+
+\begin{equation}
+\label{eqn:2.3-soln}
+	\begin{bmatrix}
+		\sum_{i=1}^{n}y_i \\
+		\sum_{i=1}^{n}y_ix_{i1}\\
+		\sum_{i=1}^{n}y_ix_{i2}\\
+		\sum_{i=1}^{n}y_ix_{i_3}^3
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		n  							& \sum_{i=1}^{n} x_{i1} 			& \sum_{i=1}^{n} x_{i2} 			& \sum_{i=1}^{n} x_{i_3}^3 \\
+		\sum_{i=1}^{n} x_{i1}  		& \sum_{i=1}^{n} x_{i1}^2 			& \sum_{i=1}^{n} x_{i2}x_{i1}		& \sum_{i=1}^{n} x_{i_3}^3x_{i1} \\
+		\sum_{i=1}^{n} x_{i2}  		& \sum_{i=1}^{n} x_{i1}x_{i2} 		& \sum_{i=1}^{n} x_{i2}^2 			& \sum_{i=1}^{n} x_{i_3}^3x_{i2} \\
+		\sum_{i=1}^{n} x_{i_3}^3	& \sum_{i=1}^{n} x_{i1}x_{i_3}^3 	& \sum_{i=1}^{n} x_{i2}x_{i_3}^3 	& \sum_{i=1}^{n} x_{i_3}^6
+	\end{bmatrix}
+	\begin{bmatrix}
+		\beta_0\\
+		\beta_1\\
+		\beta_2\\
+		\beta_3\\
+	\end{bmatrix}
+\end{equation}
+
+
+\noindent Equation \ref{eqn:2.3-soln} needs to be solved to obtain the required estimates. But let us try to move this a bit further. If we ser the design matrix $\textbf{X}$ as follows:
+
+$$
+\textbf{X}
+=
+\begin{bmatrix}
+1	& x_{11}	& x_{12}	& x_{13} \\
+1	& x_{21}	& x_{22}	& x_{23} \\
+1	& \vdots	& \vdots	& \vdots \\
+1	& x_{n1}	& x_{n2}	& x_{n3} \\
+\end{bmatrix}
+$$
+
+\noindent We can see that
+
+$$
+\textbf{X}^T \textbf{X}
+=
+\begin{bmatrix}
+	n  							& \sum_{i=1}^{n} x_{i1} 			& \sum_{i=1}^{n} x_{i2} 			& \sum_{i=1}^{n} x_{i_3}^3 \\
+	\sum_{i=1}^{n} x_{i1}  		& \sum_{i=1}^{n} x_{i1}^2 			& \sum_{i=1}^{n} x_{i2}x_{i1}		& \sum_{i=1}^{n} x_{i_3}^3x_{i1} \\
+	\sum_{i=1}^{n} x_{i2}  		& \sum_{i=1}^{n} x_{i1}x_{i2} 		& \sum_{i=1}^{n} x_{i2}^2 			& \sum_{i=1}^{n} x_{i_3}^3x_{i2} \\
+	\sum_{i=1}^{n} x_{i_3}^3	& \sum_{i=1}^{n} x_{i1}x_{i_3}^3 	& \sum_{i=1}^{n} x_{i2}x_{i_3}^3 	& \sum_{i=1}^{n} x_{i_3}^6
+\end{bmatrix}
+$$
+
+\noindent and
+
+$$
+\textbf{X}^T \textbf{Y}
+=
+\begin{bmatrix}
+	\sum_{i=1}^{n}y_i \\
+	\sum_{i=1}^{n}y_ix_{i1}\\
+	\sum_{i=1}^{n}y_ix_{i2}\\
+	\sum_{i=1}^{n}y_ix_{i_3}^3
+\end{bmatrix}
+$$
+
+\noindent Therefore Equation \ref{eqn:2.3-soln} can be written as
+
+\begin{equation}
+	\mathbf{X}^T \mathbf{Y} = \mathbf{X}^T \mathbf{X} \boldsymbol{\beta}
+\end{equation}
+
+\noindent so that
+
+\begin{equation}
+	\boldsymbol{\beta} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}
+\end{equation}
+
+
+$\mathbf{X}^T \mathbf{X}$  is known as the Gram matrix and represents the relationships among predictor variables in a regression model. Its inverse, $(\mathbf{X}^T \mathbf{X})^{-1}$, plays a crucial role in calculating the variance and standard errors of the estimated regression coefficients. Specifically, the diagonal elements of $(\mathbf{X}^T \mathbf{X})^{-1}$ are used to compute the standard errors of the estimated coefficients. The standard error of $\hat{\beta}_j$ is given by:
+
+$$
+SE(\hat{\beta}_j) = \sqrt{\sigma^2 \cdot \left( (\mathbf{X}^T \mathbf{X})^{-1} \right)_{jj}}
+$$
+
+where $\sigma^2$ is the residual variance, and $\left( (\mathbf{X}^T \mathbf{X})^{-1} \right)_{jj}$ is the diagonal element corresponding to $\beta_j$. This formulation ensures that the uncertainty in the coefficient estimates accounts for correlations between predictors, making it a fundamental component in statistical inference for regression models.
+
 
 \subsection{ Generate or source a dataset for which you would use this type of model and fit the model to the data.  Present a plot of the fitted model to the data.  Comment on the goodness of fit of the model to the data.  The R code used for this question should be presented together with the answers. Proper referencing should be provided in the text if the data is sourced.}
 
+Listing \ref{lst:ols} creates a synthetic dataset for this examples and fits the specified linear model. It can be summarized as follows:
+
+\begin{enumerate}
+	\item The predictor variable ranges are first defined. The predictor variables are then generated with random noise to introduce variability, which ensures numerical stability in regression computations.  
+	
+	\item The regression coefficients are then specified; $\beta_0 = 5$, $\beta_1 = 2.5$, $\beta_2 = -1.2$, $\beta_3 = 0.8$
+	
+	\item The response variable ($y$) is computed as a linear combination of $x_1$ and $x_2$, along with a cubic transformation of $x_3$ to capture nonlinear effects.  
+	
+	\item Random noise is added to the response variable to simulate measurement error and external variability, forcing the model to account for stochastic influences.  
+	
+	\item A multiple regression model is then fitted to estimate the relationships between predictors and the response variable while incorporating the cubic transformation of $x_3$ to capture nonlinear patterns.  
+\end{enumerate}
 
 
+\begin{figure}[H]
+	\captionsetup{type=lstlisting}
+	\begin{lstlisting}
+set.seed(2023)
+
+library(ggplot2)
+
+# Generate data
+
+number_of_samples <- 1000
+
+limits_x1 <- c(-10, 10)
+limits_x2 <- c(-7, 5)
+limits_x3 <- c(-3, 8)
+
+x1 <- seq(limits_x1[1], limits_x1[2], length.out = number_of_samples) + rnorm(number_of_samples, mean = 0, sd = 2)  # Add slight randomness
+x2 <- seq(limits_x2[1], limits_x2[2], length.out = number_of_samples) + rnorm(number_of_samples, mean = 0, sd = 2)  # Add slight randomness
+x3 <- seq(limits_x3[1], limits_x3[2], length.out = number_of_samples) + rnorm(number_of_samples, mean = 0, sd = 2)  # Add slight randomness
+
+beta_0  <- 5
+beta_1  <- 2.5
+beta_2  <- -1.2
+beta_3  <- 0.8
+
+y <- beta_0 + (beta_1 * x1) + (beta_2 * x2) + (beta_3 * x3^3)
+error <- rnorm(length(y), mean = 0.1, sd = 10)  # Random noise
+y_real <- y + error
+
+
+model <- lm(y_real ~ x1 + x2 + I(x3^3))
+print(summary(model))			
+		\end{lstlisting}
+	\caption{Data generation and model fitting using OLS}
+	\label{lst:ols}
+\end{figure}
+
+The following table lists the \texttt{summary} results that were obtained. Figure \ref{fig:img-2-3-2} shows the actual vs. predicted values for our model. The plot suggests that the model’s predictions are very close to the actual values, meaning it captures most of the variance in the data.
 
 
 \begin{longtable}{|p{0.4\textwidth}|p{0.6\textwidth}|}
 	\hline
-	\textbf{Regression Output} & \textbf{Explanation} \\
+	\textbf{Regression Output} & \textbf{Comment} \\
 	\hline
 
 	\hline
@@ -409,7 +603,7 @@ $$
 	\hline
 	\texttt{Max = 33.252} & Largest residual (largest under-prediction). \\
 	\hline
-	\texttt{residuals plot} & \parbox[c]{5cm}{\centering\includegraphics[width=4cm]{img/img_2-3-1}} \\
+	\texttt{residuals plot} (not part of summary but generated subsequently) & \parbox[c]{5cm}{\centering\includegraphics[width=4cm]{img/img-2-3-1}} \\
 	\hline
 
 	\hline	
@@ -421,39 +615,42 @@ $$
 	\hline
 	\texttt{x2 = -1.41965} & $\hat{\beta_2}$\\
 	\hline
-	\texttt{I(x3\textasciicircum3) = 0.80047} & $\beta_3$\\
+	\texttt{I(x3\textasciicircum3) = 0.80047} & $\hat{\beta_3}$\\
+	\hline
+
 	\hline
 	\multicolumn{2}{|c|}{\textbf{Standard Errors (Precision of Estimates)}} \\
 	\hline
-	\texttt{Intercept SE} = 0.39241 & Standard error for $\beta_0$. \\
+	\texttt{Intercept SE} = 0.39241 & Standard error for $\beta_0$. Smaller SE suggests a reliable estimate. \\
 	\hline
-	\texttt{x1 SE} = 0.09603 & Standard error for $\beta_1$. \\
+	\texttt{x1 SE} = 0.09603 & Standard error for $\beta_1$. A small SE implies that estimates are stable. \\
 	\hline
-	\texttt{x2 SE} = 0.13976 & Standard error for $\beta_2$. \\
+	\texttt{x2 SE} = 0.13976 & Standard error for $\beta_2$. Suggests moderate precision but check for multicollinearity. \\
 	\hline
-	\texttt{I(x3\textasciicircum3) SE} = 0.00157 & Very small SE, indicating high precision. \\
+	\texttt{I(x3\textasciicircum3) SE} = 0.00157 & Very small SE, indicating high precision and a narrow confidence interval. \\
 	\hline
 	\multicolumn{2}{|c|}{\textbf{t-values (Test Statistic for Significance)}} \\
 	\hline
 	\texttt{Intercept t-value} = 13.88 & Indicates the intercept is statistically significant. \\
 	\hline
-	\texttt{x1 t-value} = 27.86 & Strong evidence that $x_1$ affects $y$. \\
+	\texttt{x1 t-value} = 27.86 & Strong evidence that $x_1$ affects $y$. Practical significance should also be considered. \\
 	\hline
-	\texttt{x2 t-value} = -10.16 & Strong evidence that $x_2$ affects $y$. \\
+	\texttt{x2 t-value} = -10.16 & Strong evidence that $x_2$ affects $y$. Multicollinearity should be assessed. \\
 	\hline
-	\texttt{I(x3\textasciicircum3) t-value} = 509.81 & Extremely strong effect of $x_3^3$ on $y$. \\
+	\texttt{I(x3\textasciicircum3) t-value} = 509.81 & Extremely strong effect of $x_3^3$ on $y$. Consider checking residual plots for outliers. \\
 	\hline
+
 
 	\hline
 	\multicolumn{2}{|c|}{\textbf{p-values (Significance Levels)}} \\
 	\hline
-	\texttt{Intercept p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\texttt{Intercept p-value < 2e-16} & Highly significant \texttt{(p < 0.001)}. \\
 	\hline
-	\texttt{x1 p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\texttt{x1 p-value < 2e-16} & Highly significant \texttt{(p < 0.001)}. \\
 	\hline
-	\texttt{x2 p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\texttt{x2 p-value < 2e-16} & Highly significant \texttt{(p < 0.001)}. \\
 	\hline
-	\texttt{I(x3\textasciicircum3) p-value < 2e-16} & Highly significant (p < 0.001). \\
+	\texttt{I(x3\textasciicircum3) p-value < 2e-16} & Highly significant \texttt{(p < 0.001)}. \\
 	\hline
 
 	\hline
@@ -471,6 +668,14 @@ $$
 	\hline
 \end{longtable}
 	
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-2-3-2}
+	\caption{Predicted vs. actual values of the response variable}
+	\label{fig:img-2-3-2}
+\end{figure}
 
 
 
