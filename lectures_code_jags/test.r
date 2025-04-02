@@ -47,7 +47,7 @@ post2<-coda.samples(jagmod2,c('taue','beta0','beta1'),10000)
 summary(post2)
 library(lattice)
 xyplot(post2)
-#Trace for a selected parameter, chains in separate panels:
+# Trace for a selected parameter, chains in separate panels:
 xyplot(post2[,'beta0'],outer=T,layout=c(1,3))
 gelman.diag(post2)
 gelman.plot(post2)
