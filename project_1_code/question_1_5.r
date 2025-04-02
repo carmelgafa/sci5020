@@ -33,6 +33,6 @@ p <- ggplot(data,
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
-quartz()
+# quartz()
 print(p)
 
