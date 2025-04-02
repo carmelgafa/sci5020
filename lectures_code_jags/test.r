@@ -40,20 +40,20 @@ par(mar = c(1, 1, 1, 1))
 plot(post)
 
 
-# #Adding more chains
-# jagmod2<-jags.model(textConnection(model),data_jags,inits=initial,n.chains=3)
+#Adding more chains
+jagmod2<-jags.model(textConnection(model),data_jags,inits=initial,n.chains=3)
 
-# post2<-coda.samples(jagmod2,c('taue','beta0','beta1'),10000)
-# summary(post2)
-# library(lattice)
-# xyplot(post2)
-# #Trace for a selected parameter, chains in separate panels:
-# xyplot(post2[,'beta0'],outer=T,layout=c(1,3))
-# gelman.diag(post2)
-# gelman.plot(post2)
-# acfplot(post2,outer=T)
-# effectiveSize(post2)#summed across chains
-# lapply(post2,effectiveSize)
+post2<-coda.samples(jagmod2,c('taue','beta0','beta1'),10000)
+summary(post2)
+library(lattice)
+xyplot(post2)
+#Trace for a selected parameter, chains in separate panels:
+xyplot(post2[,'beta0'],outer=T,layout=c(1,3))
+gelman.diag(post2)
+gelman.plot(post2)
+acfplot(post2,outer=T)
+effectiveSize(post2)#summed across chains
+lapply(post2,effectiveSize)
 
 
 
