@@ -32,4 +32,4 @@ print(mean(x[,1]))
 print(mean(x[,2]))
 print(cov(x))
 
-# plot(x)
+plot(x)
