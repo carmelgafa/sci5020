@@ -284,7 +284,7 @@ For sample $\mathbf{x} = ( x_1, \dots, x_n )^T$ obtained on an exponential distr
 \noindent The log-likelihood is then
 
 $$	
-l(\mathbf{x}, \mathbf{\theta}) = n \space log(\lambda) - \lambda \sum_{i=0}^{n} x_i	
+l(\mathbf{x}, \mathbf{\theta}) = n \space \log(\lambda) - \lambda \sum_{i=0}^{n} x_i	
 $$
 
 \noindent Taking the derivative with respect to $\lambda$,
@@ -689,23 +689,109 @@ Let $x_1, \dots, x_n$ be a random sample selected from a population with a distr
 For this problem we will examine the famous Pareto distribution that is used to describe a wide range of phenomena. The probability density function for this distribution is given by;
 
 $$
-f(x) = \frac{\alpha x_{m}^{\alpha}}{x^{\alpha+1}} \text{   for  }\alpha > 0, x\ge x_m
+f(x; \alpha, x_m) = 
+\begin{cases}
+\frac{\alpha x_{m}^{\alpha}}{x^{\alpha+1}} & x\ge x_m\\
+0 & otherwise
+\end{cases}
+\text{   for  }\alpha > 0, 
 $$
 
 Where
 \begin{itemize}
 	\item The shape parameter or tail index $\alpha$ defines thickness of the distribution tail. 
-	todo:
+	\item The scale parameter $x_m$ represents the minimum  possible value that random variable $X$ can take in the distribution.
 \end{itemize}
 
+\noindent The likelihood function for this distribution;
 
 
+$$
+L(\alpha, x_m; x) = \prod_{i=1}^{n} \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}}
+$$
 
+\noindent then,
+
+\begin{flalign*}
+l(\alpha, x_m;x) &= \sum_{i=1}^{n} \log \left(  \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}} \right)\\
+	&= \sum_{i=1}^{n}  \left(  \log (\alpha x_{m}^{\alpha}) - \log(x_i^{\alpha+1}) \right)\\
+	&= \sum_{i=1}^{n} \log (\alpha x_{m}^{\alpha}) - \sum_{i=1}^{n} \log(x_i^{\alpha+1}) \\
+	&= \sum_{i=1}^{n} \log (\alpha) + \sum_{i=1}^{n} \log (x_{m}^{\alpha}) - \sum_{i=1}^{n} \log(x_i^{\alpha+1}) \\
+	&= n \log (\alpha) + n \alpha \log (x_{m}) - (\alpha+1)\sum_{i=1}^{n} \log(x_i) \\
+\end{flalign*}
+
+
+%\noindent if we consider
+%
+%$$
+%\frac{\partial l(\alpha, x_m; x)}{\partial x_m} = \frac{n \alpha}{x_m} \quad x_m \le x_i
+%$$
+
+\noindent As the probability density function is only defined for $x_i \ge x_m$, the likelihood is zero if $x_m > \min(x_1 \dots x_n)$.
+So, the maximum likelihood estimate of $x_m$ is the largest value such that all observed data are $\ge x_m$. This implies:
+
+$$
+\widehat{x}_m = \min(x_1 \dots x_n)
+$$
+
+
+\noindent Similarly,
+
+$$
+\frac{\partial l(\alpha, x_m; x)}{\partial \alpha} = \frac{n}{\alpha} + n \: \log(x_m) - \sum_{i=1}^{n} \log(x_i)
+$$
+
+\noindent for maximum likelihood
+
+\begin{flalign*}
+\frac{n}{\alpha} + n \: \log(x_m) - \sum_{i=1}^{n} \log(x_i) &= 0\\
+-\frac{n}{\alpha} - n \: \log(x_m) + \sum_{i=1}^{n} \log(x_i) &= 0\\
+-\frac{n}{\alpha} - \sum_{i=1}^{n} \log(x_m) + \sum_{i=1}^{n} \log(x_i) &= 0\\
+-\frac{n}{\alpha} + \sum_{i=1}^{n} \log \frac{x_i}{x_m} &= 0
+\end{flalign*}
+
+\noindent Hence;
+
+$$
+\widehat{\alpha} = \frac{n}{\sum_{i=1}^{n} \log \frac{x_i}{x_m}}
+$$
+
+
+\noindent Where  $x_i \ge x_m$ and $\widehat{x}_m = \min(\textbf{x})$, so,
+
+
+$$
+\widehat{\alpha} = \frac{n}{\sum_{i=1}^{n} \log \frac{x_i}{\min(x_1 \dots x_n)}}
+$$
 
 
 
 
 \subsection{Find the Cramer-Rao lower bound for the maximum likelihood estimator/s obtained in Q3i).}
+
+The likelihood for a single observation
+
+$$
+L(x; \alpha, x_m) = \frac{\alpha x_{m}^{\alpha}}{x^{\alpha+1}} ;\quad x\ge x_m
+$$
+
+The log likelihood
+$$
+l(x; \alpha, x_m) = \log(\alpha) +\alpha \log(x_m) -(\alpha+1) log(x)
+$$
+
+For $x_m$, the score function
+
+$$
+\frac{\partial l(x; \alpha, x_m)}{\partial x_m} = \frac{\alpha}{x_m} ;\quad x\ge x_m
+$$
+
+Taking the second derivative with respect to $x_m$
+$$
+\frac{\partial^2 l(x; \alpha, x_m)}{\partial x_m^2} = -\frac{\alpha}{x_m^2} ;\quad x\ge x_m
+$$
+
+
 
 \subsection{Does/do the ML estimator/s obtained in Q3i) attain the Cramer-Rao lower bound?  Give a reason for your answer. }
 
