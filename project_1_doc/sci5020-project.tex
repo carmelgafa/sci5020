@@ -707,13 +707,13 @@ Where
 
 
 $$
-L(\alpha, x_m; x) = \prod_{i=1}^{n} \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}}
+L(x; \alpha, x_m) = \prod_{i=1}^{n} \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}}
 $$
 
 \noindent then,
 
 \begin{flalign*}
-l(\alpha, x_m;x) &= \sum_{i=1}^{n} \log \left(  \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}} \right)\\
+l(x; \alpha, x_m) &= \sum_{i=1}^{n} \log \left(  \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}} \right)\\
 	&= \sum_{i=1}^{n}  \left(  \log (\alpha x_{m}^{\alpha}) - \log(x_i^{\alpha+1}) \right)\\
 	&= \sum_{i=1}^{n} \log (\alpha x_{m}^{\alpha}) - \sum_{i=1}^{n} \log(x_i^{\alpha+1}) \\
 	&= \sum_{i=1}^{n} \log (\alpha) + \sum_{i=1}^{n} \log (x_{m}^{\alpha}) - \sum_{i=1}^{n} \log(x_i^{\alpha+1}) \\
@@ -738,7 +738,7 @@ $$
 \noindent Similarly,
 
 $$
-\frac{\partial l(\alpha, x_m; x)}{\partial \alpha} = \frac{n}{\alpha} + n \: \log(x_m) - \sum_{i=1}^{n} \log(x_i)
+\frac{\partial l(x; \alpha, x_m)}{\partial \alpha} = \frac{n}{\alpha} + n \: \log(x_m) - \sum_{i=1}^{n} \log(x_i)
 $$
 
 \noindent for maximum likelihood
