@@ -694,7 +694,7 @@ f(x; \alpha, x_m) =
 \frac{\alpha x_{m}^{\alpha}}{x^{\alpha+1}} & x\ge x_m\\
 0 & otherwise
 \end{cases}
-\text{   for  }\alpha > 0, 
+\text{   for  }\alpha > 0  \quad x_m > 0, 
 $$
 
 Where
@@ -707,7 +707,7 @@ Where
 
 
 $$
-L(\alpha, x_m; x) = \prod_{i=1}^{n} \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}}
+L(\alpha, x_m; x) =  \prod_{i=1}^{n} f(x; \alpha, x_m)= \prod_{i=1}^{n} \frac{\alpha x_{m}^{\alpha}}{x_i^{\alpha+1}}
 $$
 
 \noindent then,
@@ -721,13 +721,7 @@ l(\alpha, x_m;x) &= \sum_{i=1}^{n} \log \left(  \frac{\alpha x_{m}^{\alpha}}{x_i
 \end{flalign*}
 
 
-%\noindent if we consider
-%
-%$$
-%\frac{\partial l(\alpha, x_m; x)}{\partial x_m} = \frac{n \alpha}{x_m} \quad x_m \le x_i
-%$$
-
-\noindent As the probability density function is only defined for $x_i \ge x_m$, the likelihood is zero if $x_m > \min(x_1 \dots x_n)$.
+\noindent As the probability density function is only defined for $x_i \ge x_m$, the likelihood is zero iff $x_m \le \min(x_1 \dots x_n)$.
 So, the maximum likelihood estimate of $x_m$ is the largest value such that all observed data are $\ge x_m$. This implies:
 
 $$
@@ -764,33 +758,81 @@ $$
 \widehat{\alpha} = \frac{n}{\sum_{i=1}^{n} \log \frac{x_i}{\min(x_1 \dots x_n)}}
 $$
 
+\noindent  Hence the maximum likelihood estimators are:
 
+$$
+\widehat{x}_m = \min(x_1 \dots x_n), \quad \widehat{\alpha} = \frac{n}{\sum_{i=1}^{n} \log \frac{x_i}{\min(x_1 \dots x_n)}}
+$$
 
 
 \subsection{Find the Cramer-Rao lower bound for the maximum likelihood estimator/s obtained in Q3i).}
 
-The likelihood for a single observation
-
+\noindent The likelihood for a single observation
 $$
 L(x; \alpha, x_m) = \frac{\alpha x_{m}^{\alpha}}{x^{\alpha+1}} ;\quad x\ge x_m
 $$
 
-The log likelihood
+\noindent The log likelihood
 $$
 l(x; \alpha, x_m) = \log(\alpha) +\alpha \log(x_m) -(\alpha+1) log(x)
 $$
 
-For $x_m$, the score function
+\noindent For $x_m$, the score function
 
 $$
-\frac{\partial l(x; \alpha, x_m)}{\partial x_m} = \frac{\alpha}{x_m} ;\quad x\ge x_m
+\frac{\partial l(x; \alpha, x_m)}{\partial x_m} = \frac{\alpha}{x_m} ;\quad x\ge x_m, x_m>0, \alpha>0
 $$
 
-Taking the second derivative with respect to $x_m$
+\noindent Taking the second derivative with respect to $x_m$
 $$
-\frac{\partial^2 l(x; \alpha, x_m)}{\partial x_m^2} = -\frac{\alpha}{x_m^2} ;\quad x\ge x_m
+\frac{\partial^2 l(x; \alpha, x_m)}{\partial x_m^2} = -\frac{\alpha}{x_m^2} ;\quad x\ge x_m, x_m>0, \alpha>0
 $$
 
+\noindent The expected value;
+
+$$
+E \left[ \frac{\partial^2 l(x; \alpha, x_m)}{\partial x_m^2} \right] = -\frac{\alpha}{x_m^2} ;\quad x\ge x_m, x_m>0, \alpha>0
+$$
+
+\noindent Fisher information for n samples,
+
+$$
+I_n(x_m) = \frac{n\alpha}{x_m^2};\quad x\ge x_m, x_m>0, \alpha>0
+$$
+
+\noindent So CRLB,
+
+$$
+Var(\widehat{x}_m) \ge \frac{x_m^2}{n\alpha};\quad x_m>0, \alpha>0
+$$
+
+\noindent For $\alpha$, the score function
+$$
+\frac{\partial l(x; \alpha, x_m)}{\partial \alpha} = \frac{1}{\alpha} + log(x_m) - log(x) ;\quad x\ge x_m, x_m>0, \alpha>0
+$$
+
+\noindent Taking the second derivative with respect to $\alpha$
+$$
+\frac{\partial^2 l(x; \alpha, x_m)}{\partial \alpha^2} = -\frac{1}{\alpha^2} ;\quad x\ge x_m, x_m>0, \alpha>0
+$$
+
+\noindent The expected value;
+
+$$
+E \left[ \frac{\partial^2 l(x; \alpha, x_m)}{\partial \alpha^2} \right]  = -\frac{1}{\alpha^2} ;\quad x\ge x_m, x_m>0, \alpha>0
+$$
+
+\noindent Fisher information for n samples,
+
+$$
+I_n(\alpha) = \frac{n}{\alpha^2};\quad x\ge x_m, x_m>0, \alpha>0
+$$
+
+\noindent So CRLB,
+
+$$
+Var(\widehat{\alpha}) \ge \frac{\alpha^2}{n};\quad \alpha>0
+$$
 
 
 \subsection{Does/do the ML estimator/s obtained in Q3i) attain the Cramer-Rao lower bound?  Give a reason for your answer. }

@@ -1,6 +1,18 @@
 {
     "cSpell.words": [
+        "bivariate",
+        "coef",
+        "colnames",
+        "Cramer",
         "dtruncnorm",
+        "ggplot",
+        "lapply",
+        "linetype",
+        "lstlisting",
+        "nlsbs",
+        "nrow",
+        "openxlsx",
+        "rbind",
         "sigmastar"
     ]
 }
