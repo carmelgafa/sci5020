@@ -837,6 +837,186 @@ $$
 
 \subsection{Does/do the ML estimator/s obtained in Q3i) attain the Cramer-Rao lower bound?  Give a reason for your answer. }
 
+We start this discussion by finding $E[\widehat{\alpha}]$, where as we have seen
+$$
+\widehat{\alpha} = \frac{n}{\sum_{i=1}^{n} \log \frac{X_i}{x_m}} \quad, x_m >0
+$$
+where $log$ is the natural log, and 
+$$
+X_i \sim \text{Pareto }(\alpha, x_m)
+$$
+
+\noindent We focus on the denominator
+$$
+S = \sum_{i=1}^{n} \log \frac{X_i}{x_m}
+$$
+
+\noindent and understand its distribution so that we can arrive to the estimate of $E[\widehat{\alpha}]$; and so we start by just understanding the distribution of $ \log \frac{X_i}{x_m}$. If we define
+
+$$
+Y = \log \frac{X}{x_m}
+$$
+so that 
+$$
+X = x_m e^{Y}
+$$
+
+The cumulative distribution function of $Y$ is
+
+\begin{align*}
+	F_Y(y) &= P(Y \leq y) \quad, \forall y \\
+			&= P(\log \frac{X}{x_m} \leq y) \\
+			&= P(\frac{X}{x_m} \leq e^{y}) \\
+			&= P(X \leq x_m e^{y}) \\
+\end{align*}
+
+for a Pareto distribution, the cumulative distribution function,
+$$
+F_X(x) = P(X\leq x) = 1 - \left( \frac{x_m}{x} \right)^\alpha \quad ,x \ge x_m
+$$
+
+So,
+
+\begin{align*}
+	F_Y(y) &= P(X \leq x_m e^{y}) \\
+			&= 1 - \left( \frac{x_m}{x} \right)^\alpha \quad ,x \ge x_m \\
+			& = 1 - e^{-y\alpha} \quad , \alpha \ge 0
+\end{align*}
+
+\noindent differentiation to obtain the p.d.f,
+
+$$
+Y = log \left(\frac{X}{x_m}\right) \sim \text{Exponential}(\alpha)
+$$
+
+\noindent Moving on to $S = \sum_{i=1}^{n} \log \frac{X_i}{x_m}$ where $X_i$ are i.i.d and exponential with rate $\alpha$, so $S$ follows a Gamma distribution.
+
+$$
+S \sim \text(Gamma) (n, \alpha)
+$$
+
+\noindent The p.d.f. for this Gamma distribution is
+$$
+f_S(s) = \frac{\alpha^n}{\Gamma (n)} s^{n-1} e^{-\alpha s}
+$$
+
+\noindent To find $E[\hat{\alpha}]$, since
+
+$$
+\hat{\alpha} = \frac{n}{S}
+$$
+
+\noindent Then
+
+$$
+E\left[\hat{\alpha}\right] = n E[\frac{1}{S}]
+$$
+
+\noindent Now
+
+\begin{align*}
+E \left[\frac{1}{S}\right] &= \int_{0}^{\infty} \frac{1}{S} f(s) dS\\
+							&= \int_{0}^{\infty} \frac{1}{S}  \frac{\alpha^n}{\Gamma (n)} S^{n-1} e^{-\alpha s} dS \\
+							&= \frac{\alpha^n}{\Gamma (n)} \int_{0}^{\infty} \frac{1}{S} S^{n-1} e^{-\alpha s} dS \\
+							&= \frac{\alpha^n}{\Gamma (n)} \int_{0}^{\infty} S^{n-2} e^{-\alpha s} dS \\
+\end{align*}
+
+\noindent Since 
+$$
+\Gamma(n) = \int_{0}^{\infty} S^{n-1} e^{-s} dS \\
+$$
+
+\noindent If we let
+
+\begin{align*}
+u = \alpha S\\
+\text{so that } S=\frac{u}{\alpha}\\
+\text{and } ds = \frac{1}{\alpha} du
+\end{align*}
+
+
+\begin{align*}
+	\int_{0}^{\infty} S^{n-2} e^{-\alpha s} dS  &= \int_{0}^{\infty} \left(\frac{u}{\alpha} \right)^{n-2} e^{-u}\frac{1}{\alpha} du \\
+												&= \frac{1}{\alpha^{n-1}} \int_{0}^{\infty} u^{n-2} e^{-u} du \\
+												&= \frac{1}{\alpha^{n-1}} \Gamma(n-1)
+\end{align*}
+
+\noindent And therefore, 
+
+\begin{align*}
+E \left[\frac{1}{S}\right] &= \frac{\alpha^n}{\Gamma (n)} \frac{1}{\alpha^{n-1}} \Gamma(n-1)\\
+							&=  \frac{\alpha\Gamma (n-1)}{\Gamma (n)}\\
+							&=  \frac{\alpha\Gamma (n-1)}{(n-1)\Gamma (n-1)}\\
+							&=  \frac{\alpha}{(n-1)}
+\end{align*}
+
+
+
+\noindent Let us also consider,
+
+\begin{align*}
+	E \left[\frac{1}{S^2}\right] &= \int_{0}^{\infty} \frac{1}{S^2} f(s) dS\\
+	&= \int_{0}^{\infty} \frac{1}{S^2}  \frac{\alpha^n}{\Gamma (n)} S^{n-1} e^{-\alpha s} dS \\
+	&= \frac{\alpha^n}{\Gamma (n)} \int_{0}^{\infty} \frac{1}{S^2} S^{n-1} e^{-\alpha s} dS \\
+	&= \frac{\alpha^n}{\Gamma (n)} \int_{0}^{\infty} S^{n-3} e^{-\alpha s} dS \\
+\end{align*}
+
+\noindent If we let
+
+\begin{align*}
+	u = \alpha S\\
+	\text{so that } S=\frac{u}{\alpha}\\
+	\text{and } ds = \frac{1}{\alpha} du
+\end{align*}
+
+\begin{align*}
+	\int_{0}^{\infty} S^{n-3} e^{-\alpha s} dS  &= \int_{0}^{\infty} \left(\frac{u}{\alpha} \right)^{n-3} e^{-u} \frac{1}{\alpha} du \\
+										&= \frac{1}{\alpha^{n-2}} \int_{0}^{\infty} u^{n-3} e^{-u} du \\
+										&= \frac{1}{\alpha^{n-2}} \Gamma(n-2)
+\end{align*}
+
+
+\begin{align*}
+	E \left[\frac{1}{S^2}\right] &= \frac{\alpha^n}{\Gamma (n)} \frac{1}{\alpha^{n-2}} \Gamma(n-2)\\
+	&=  \frac{\alpha^2\Gamma (n-2)}{\Gamma (n)}\\
+	&=  \frac{\alpha^2\Gamma (n-2)}{(n-2)(n-1)\Gamma (n-2)}\\
+	&=  \frac{\alpha^2}{(n-2)(n-1)}
+\end{align*}
+
+
+
+\noindent And therefore, since $\hat{\alpha} = \frac{n}{S}$
+
+$$
+E[\hat{\alpha}] = \frac{n\alpha}{n-1}
+$$
+
+\noindent and
+
+$$
+E[\hat{\alpha}^2] = \frac{n^2\alpha^2}{(n-2)(n-1)}
+$$
+
+\noindent Now,
+
+\begin{align*}
+	\text{Var}(\hat{\alpha}) &= E[\hat{\alpha}^2] - E[\hat{\alpha}]^2\\
+						&= \frac{n^2\alpha^2}{(n-2)(n-1)} - \frac{n^2\alpha^2}{(n-1)^2}\\
+						&= n^2\alpha^2 \left( \frac{(n-1)-(n-2)}{(n-2)(n-1)^2}\right)\\
+						&= \frac{n^2\alpha^2}{(n-2)(n-1)^2}\\
+\end{align*}
+
+
+\noindent This variance is greater than the Cramer Rao lower bound as,
+$$
+\frac{n^2\alpha^2}{(n-2)(n-1)^2}  > \frac{\alpha^2}{n} \quad ,\forall n>2
+$$
+
+\noindent We also notice that as $n \rightarrow \infty$, the variance approaches $\frac{\alpha^2}{n}$, and hence $\hat{\alpha}$ becomes asymptotically unbiased.
+
+
+
+
 \subsection{Is/are the ML estimator/s obtained in Q3i) a sufficient statistic for the population parameter/s?  Give a reason for your answer.}
 
 \subsection{Why are maximum likelihood estimators considered to be desirable estimators?  Mention one situation where a maximum likelihood estimator might not be optimal.   }
