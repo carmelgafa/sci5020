@@ -51,7 +51,7 @@ The \textbf{Exponential Distribution} is a continuous probability distribution t
 \subsection{Give reference to a publication in which the exponential distribution has been used in practise.  
 	Explain the context in which this distribution has been used in this publication.}
 
-Mahmud et al. presented a study where they analyzed and estimated response times to questions on Twitter\cite{mahmud2013will}. The authors developed predictive models to estimate response wait times, exploring three different approaches:
+Mahmud et al. presented a study where they analysed and estimated response times to questions on Twitter\cite{mahmud2013will}. The authors developed predictive models to estimate response wait times, exploring three different approaches:
 
 \begin{itemize}
 	\item Personalized wait time models: These models estimate the wait time for a specific user based on their individual history of response wait times. They assume each response event for a user occurs continuously and independently at a constant average rate, modelled by an exponential distribution. Each user's rate parameter $\lambda$ is estimated as the inverse of their average past response wait times.
@@ -382,11 +382,11 @@ y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3}^3 + \varepsilon
 $$
 
 
-is the Ordinary Least Squares (OLS) Estimator. This estimator is used because it is linear in parameters, even though $x_3^3$introduces a nonlinear transformation. In addition, OLS minimizes the sum of squared residuals to obtain the best fit for the parameters. Properties of the OLS estimator include:
+is the Ordinary Least Squares Estimator. This estimator is used because it is linear in parameters, even though $x_3^3$introduces a non-linear transformation. In addition, Ordinary Least Squares minimizes the sum of squared residuals to obtain the best fit for the parameters. Properties of the Ordinary Least Squares estimator include:
 
 \begin{itemize}
-	\item Unbiasedness. The OLS estimator is unbiased, meaning its expected value equals the true parameter value; $\mathbb{E}[\hat{\beta}] = \beta$.
-	\item Best Linear Unbiased Estimator. OLS provides the lowest variance among all linear unbiased estimators, making OLS the most efficient estimator when errors have constant variance (homoscedasticity).
+	\item Unbiasedness. The Ordinary Least Squares estimator is unbiased, meaning its expected value equals the true parameter value; $\mathbb{E}[\hat{\beta}] = \beta$.
+	\item Best Linear Unbiased Estimator. Ordinary Least Squares provides the lowest variance among all linear unbiased estimators, making Ordinary Least Squares the most efficient estimator when errors have constant variance (homoscedasticity).
 \end{itemize}
 
 
@@ -530,11 +530,11 @@ Listing \ref{lst:ols} creates a synthetic dataset for this examples and fits the
 	
 	\item The regression coefficients are then specified; $\beta_0 = 5$, $\beta_1 = 2.5$, $\beta_2 = -1.2$, $\beta_3 = 0.8$
 	
-	\item The response variable ($y$) is computed as a linear combination of $x_1$ and $x_2$, along with a cubic transformation of $x_3$ to capture nonlinear effects.  
+	\item The response variable ($y$) is computed as a linear combination of $x_1$ and $x_2$, along with a cubic transformation of $x_3$ to capture non-linear effects.  
 	
 	\item Random noise is added to the response variable to simulate measurement error and external variability, forcing the model to account for stochastic influences.  
 	
-	\item A multiple regression model is then fitted to estimate the relationships between predictors and the response variable while incorporating the cubic transformation of $x_3$ to capture nonlinear patterns.  
+	\item A multiple regression model is then fitted to estimate the relationships between predictors and the response variable while incorporating the cubic transformation of $x_3$ to capture non-linear patterns.  
 \end{enumerate}
 
 
@@ -570,7 +570,7 @@ y_real <- y + error
 model <- lm(y_real ~ x1 + x2 + I(x3^3))
 print(summary(model))			
 		\end{lstlisting}
-	\caption{Data generation and model fitting using OLS}
+	\caption{Data generation and model fitting using Ordinary Least Squares}
 	\label{lst:ols}
 \end{figure}
 
@@ -1057,14 +1057,100 @@ $$
 
 \subsection{Is/are the ML estimator/s obtained in Q3i) a sufficient statistic for the population parameter/s?  Give a reason for your answer.}
 
-\subsection{Why are maximum likelihood estimators considered to be desirable estimators?  Mention one situation where a maximum likelihood estimator might not be optimal.   }
+
+Let us consider the sufficiency of $\hat{x}_m$. As
+
+$$
+f(x_i; x_m)=
+\begin{cases}
+	\frac{\alpha x_m^\alpha}{x_i^{\alpha+1}}, & x_i \ge x_m, \\
+	0, & \text{otherwise}.
+\end{cases}
+$$
+
+\begin{align*}
+	f(x_1, \dots, x_n; x_m) &= \prod_{i=1}^{n} \frac{\alpha x_m^\alpha}{x_i^{\alpha+1}}, \quad x_m \le \min(x_1, \dots, x_n) \\
+							&= \alpha^n x_m^{n \alpha} \prod_{i=1}^{n} x_i^{-(\alpha+1)}, \quad x_m \le \min(x_1, \dots, x_n)\\
+							&\text{We can rewrite this using an indicator function,}\\
+							&= \alpha^n x_m^{n \alpha} \prod_{i=1}^{n} x_i^{-\alpha-1} \cdot \mathbf{1}_{\{x_m \le \min{(x_1, \dots, x_n)}\}}\\
+							&= \alpha^n x_m^{n \alpha}  \cdot \mathbf{1}_{\{x_m \le \min{(x_1, \dots, x_n)} \}} \prod_{i=1}^{n} x_i^{-\alpha-1}\\
+							&\text{Let } T(x) = \min{(x_1, \dots, x_n)} \\
+							&= \left(x_m^{n \alpha}  \cdot \mathbf{1}_{\{x_m \le T(x)\}}\right) \left(\alpha^n \prod_{i=1}^{n} x_i^{-\alpha-1}\right) \\
+							&= g(T(x);x_m) h(x)
+\end{align*}
+
+\noindent So by Neyman-Fisher $T(x) = \min{(x_1, \dots, x_n)}$ is a sufficient statistic of $x_m$
+
+
+Considering also the sufficiency of $\hat{\alpha}$
+
+
+$$
+f(x_i; \alpha)= \frac{\alpha x_m^\alpha}{x_i^{\alpha+1}}, \quad x_i \ge x_m
+$$
+
+
+\begin{align*}
+	f(x_1, \dots, x_n; \alpha) &= \prod_{i=1}^{n} \frac{\alpha x_m^\alpha}{x_i^{\alpha+1}} \\
+								&= \alpha^n x_m^{n \alpha} \prod_{i=1}^{n} x_i^{-\alpha-1} \\
+								&= \alpha^n e^{\log(x_m^{n\alpha})} e^{\log(\prod_{i=1}^{n} x_i^{-\alpha-1})}\\
+								&= \alpha^n e^{n\alpha \log(x_m)} e^{ (-\alpha-1)\sum_{i=1}^{n} \log(x_i)}\\
+								&= \alpha^n e^{n\alpha \log(x_m) + (-\alpha-1)\sum_{i=1}^{n} \log(x_i)}\\
+								& \text{Let } T(x) = \sum_{i=1}^{n} \log(x_i) \\
+								&= \left(\alpha^n e^{n\alpha \log(x_m) + (-\alpha-1) T(x) }\right)\left(1\right) \\
+								&= g(T(x);x_m) h(x)
+\end{align*}
+
+\noindent So $\sum_{i=1}^{n} \log(x_i)$ is a sufficient statistic of $\alpha$. Furthermore,
+
+\begin{align*}
+	\hat{\alpha} &= \frac{n}{\sum_{i=1}^{n} \log(\frac{x_i}{x_m}) }\\
+				 &=  \frac{n}{\sum_{i=1}^{n} \left(\log(x_i) - \log(x_m)\right) }\\
+				 &=  \frac{n}{\sum_{i=1}^{n} \log(x_i) - \sum_{i=1}^{n} \log(x_m) }\\
+\end{align*}
+
+\noindent Since $T(x)$ is a sufficient statistic for $\alpha$ and $\hat{\alpha}$ is a function of $T(x)$, it follows that $\hat{\alpha}$ is also sufficient for $\alpha$.
+
+
+\subsection{Why are maximum likelihood estimators considered to be desirable estimators?  Mention one situation where a maximum likelihood estimator might not be optimal.}
+
+
+Maximum likelihood estimators are considered desirable estimators due to several properties,
+
+\begin{itemize}
+	\item \textbf{Consistency}. As the sample size increases, the maximum likelihood estimator converges in probability to the parameter's actual value.
+	\item \textbf{Asymptotic Normality}. The distribution of the maximum likelihood estimator approaches a normal distribution centred on the actual parameter value.
+	\item \textbf{Asymptotic Efficiency}. Among all consistent and asymptotically normal estimators, the maximum likelihood estimator achieves the lowest possible asymptotic variance; it attains the Cramér-Rao Lower Bound asymptotically.
+	\item \textbf{Invariance}. If $\widehat{\theta}$ is the maximum likelihood estimator for $\theta$, then $g(\widehat{\theta})$ is the maximum likelihood estimator for $g(\theta)$.
+	\item \textbf{Generality}. Maximum likelihood estimators can be applied to various distributions and likelihood models, even in complex or multivariate settings.
+\end{itemize}
+
+Maximum likelihood estimators re not always optimal, particularly in small samples.
+
+
+In the Pareto($\alpha$, $x_m$) case examined in this question:
+
+The Maximum likelihood estimator for $x_m$ is:
+$$
+\widehat{x}_m = \min(x_1, \dots, x_n)
+$$
+
+Although this is the Maximum likelihood estimator, it is biased, and we showed:
+$$
+\mathbb{E}[\widehat{x}_m] = \frac{n\alpha}{n\alpha - 1} x_m \neq x_m
+$$
+
+Moreover, $\widehat{x}_m$ does not attain the Cramér-Rao lower bound, and its bias persists even in large samples.
+
+This illustrates a situation where the Maximum likelihood estimator does not perform optimally, especially in small samples: it is biased, inefficient, and may not be the best choice if an unbiased or minimum variance estimator is available.
+
 
 %------------------------------------------------------------------------------------------------------------------------
 %------------------------------------------------------------------------------------------------------------------------
 
 \section{Question 4 - Jackknife and bootstrap}
 
-\textbf{Consider 50 observations of bivariate pair $(X,Y)$ in resampling.xlsx. Use the nls command in R to estimate the nonlinear regression $Y=\frac{aX}{b+X} + \epsilon$.}
+\textbf{Consider 50 observations of bivariate pair $(X,Y)$ in resampling.xlsx. Use the nls command in R to estimate the non-linear regression $Y=\frac{aX}{b+X} + \epsilon$.}
 
 \bigskip
 
@@ -1140,7 +1226,7 @@ The code in Listing \ref{lst:jk} executes the following steps on the data to imp
 
 	\item \textbf{Divide the data into $m$ Jackknife partitions:} We split the dataset into $m = 5$ partitions, each missing a unique subset of 5 elements.
 	
-	\item \textbf{Fit the NLS model for each Jackknife sample:} We fit a non-linear regression model to each Jackknife sample using Nonlinear Least Squares (NLS) to estimate parameters $a$ and $b$. The model is defined as:
+	\item \textbf{Fit the Non-linear Least Squares model for each Jackknife sample:} We fit a non-linear regression model to each Jackknife sample using Non-linear Least Squares to estimate parameters $a$ and $b$. The model is defined as:
 	\begin{equation}
 		Y = \frac{aX}{b+X}
 	\end{equation}
@@ -1230,7 +1316,7 @@ The resulting plot is shown below in Figure \ref{fig:img-4-1-1}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-4-1-1}
-	\caption{Nonlinear regression fit: observed vs. predicted values including Jackknife predictions}
+	\caption{Non-linear regression fit: observed vs. predicted values including Jackknife predictions}
 	\label{fig:img-4-1-1}
 \end{figure}
 
@@ -1241,8 +1327,8 @@ The code in Listing \ref{lst:bs} executes the following steps on the data to imp
 	\item \textbf{Generate Bootstrap Samples:}  
 	WE create 1000 resampled datasets of size 100 by drawing with replacement from the 50 original observations.
 	
-	\item \textbf{Fit a Nonlinear Regression Model:}  
-	For each bootstrap sample, we estimate parameters $a$ and $b$ using Nonlinear Least Squares (NLS) with the model.
+	\item \textbf{Fit a Non-linear Regression Model:}  
+	For each bootstrap sample, we estimate parameters $a$ and $b$ using Non-linear Least Squares with the model.
 	
 	\item \textbf{Compute Bootstrap Estimates:}  
 	The final bootstrap estimates are obtained by averaging the parameter estimates from all bootstrap samples:
@@ -1315,7 +1401,7 @@ scale_color_manual(values = c("Full Sample Prediction" = "red",
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-4-1-2}
-	\caption{Nonlinear regression fit: observed vs. predicted values including Jackknife and Bootstrap predictions}
+	\caption{Non-linear regression fit: observed vs. predicted values including Jackknife and Bootstrap predictions}
 	\label{fig:img-4-1-2}
 \end{figure}
 
