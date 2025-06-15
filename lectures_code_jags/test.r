@@ -12,6 +12,11 @@ library(rjags)
 a<-seq(0,2,by=0.01)
 b<-dgamma(a,shape=0.01,rate=0.01)
 plot(a,b)
+
+
+
+
+
 #Specifying the model for Example 1 in the slides
 model<-"model{
   for(i in 1:n){
@@ -25,35 +30,35 @@ model<-"model{
   
 }"
 
-#Input the data
-dat<-data.frame(y=c(6,7,8,4,9,11,12,14,15,19),x=c(1,2,3,4,5,6,7,8,9,10))
-data_jags = list(y = dat$y, n = nrow(dat),x = dat$x)
-#Initial Values
-initial<-list(taue=1,beta0=0,beta1=1)
-#Checking model was correctly specified prior to running the simulation
-jagmod<-jags.model(textConnection(model),data_jags,inits=initial)
+# #Input the data
+# dat<-data.frame(y=c(6,7,8,4,9,11,12,14,15,19),x=c(1,2,3,4,5,6,7,8,9,10))
+# data_jags = list(y = dat$y, n = nrow(dat),x = dat$x)
+# #Initial Values
+# initial<-list(taue=1,beta0=0,beta1=1)
+# #Checking model was correctly specified prior to running the simulation
+# jagmod<-jags.model(textConnection(model),data_jags,inits=initial)
 
-post<-coda.samples(jagmod,c('taue','beta0','beta1'),10000)
-summary(post)
-#adjust plot margins
-par(mar = c(1, 1, 1, 1))
-plot(post)
+# post<-coda.samples(jagmod,c('taue','beta0','beta1'),10000)
+# summary(post)
+# #adjust plot margins
+# par(mar = c(1, 1, 1, 1))
+# plot(post)
 
 
-#Adding more chains
-jagmod2<-jags.model(textConnection(model),data_jags,inits=initial,n.chains=3)
+# #Adding more chains
+# jagmod2<-jags.model(textConnection(model),data_jags,inits=initial,n.chains=3)
 
-post2<-coda.samples(jagmod2,c('taue','beta0','beta1'),10000)
-summary(post2)
-library(lattice)
-xyplot(post2)
-# Trace for a selected parameter, chains in separate panels:
-xyplot(post2[,'beta0'],outer=T,layout=c(1,3))
-gelman.diag(post2)
-gelman.plot(post2)
-acfplot(post2,outer=T)
-effectiveSize(post2)#summed across chains
-lapply(post2,effectiveSize)
+# post2<-coda.samples(jagmod2,c('taue','beta0','beta1'),10000)
+# summary(post2)
+# library(lattice)
+# xyplot(post2)
+# # Trace for a selected parameter, chains in separate panels:
+# xyplot(post2[,'beta0'],outer=T,layout=c(1,3))
+# gelman.diag(post2)
+# gelman.plot(post2)
+# acfplot(post2,outer=T)
+# effectiveSize(post2)#summed across chains
+# lapply(post2,effectiveSize)
 
 
 
