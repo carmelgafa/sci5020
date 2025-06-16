@@ -1,3 +1,7 @@
+library(rjags)
+library(lattice)
+
+
 script_dir <- getwd()
 concrete_cleansed_path <- file.path(script_dir, "bayesian/concrete_cleansed.csv")
 
@@ -44,11 +48,18 @@ model <- jags.model(textConnection(model_description),
 
 update(model, n_burnin)
 
-samples <- coda.samples(model = model,
+post <- coda.samples(model = model,
                         variable.names = parameters_to_monitor,
                         n.iter = n_samples,
                         thin = 20)
 
-print(summary(samples))
+print(summary(post))
 
-plot(samples)
+plot(post[, "beta0"], main="beta0 -- Intercept")
+plot(post[, "beta1"], main="beta1 -- Cement")
+# plot(samples[, "beta2"], main="beta2 -- Superplasticizer")
+# plot(samples[, "beta3"], main="beta3 -- Age")
+# plot(samples[, "tau"], main="tau -- Precision")
+
+
+print(gelman.diag(post))
