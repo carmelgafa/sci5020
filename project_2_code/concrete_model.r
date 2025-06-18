@@ -30,7 +30,7 @@ model {
 } "
 
 n_chains <- 3
-n_burnin <- 200
+n_burnin <- 6000
 n_samples <- 15000
 parameters_to_monitor <- c("beta0", "beta1", "beta2", "beta3", "tau")
 
@@ -54,18 +54,21 @@ post <- coda.samples(model = model,
 
 post_burned <- window(post, start = n_burnin)
 
-
+print("Summary of posterior samples")
 print(summary(post_burned))
 
-plot(post_burned[, "beta0"], main="beta0 -- Intercept")
+# plot(post_burned[, "beta0"], main="beta0 -- Intercept")
 # plot(post_burned[, "beta1"], main="beta1 -- Cement")
-# plot(post_burned[, "beta2"], main="beta2 -- Superplasticizer")
-# plot(post_burned[, "beta3"], main="beta3 -- Age")
-# plot(post_burned[, "tau"], main="tau -- Precision")
+# # plot(post_burned[, "beta2"], main="beta2 -- Superplasticizer")
+# # plot(post_burned[, "beta3"], main="beta3 -- Age")
+# # plot(post_burned[, "tau"], main="tau -- Precision")
 
 
-# print(gelman.diag(post))
-gelman.plot(post_burned[, "beta0"])
+# # print(gelman.diag(post))
+# # gelman.plot(post_burned[, "beta0"])
+# gelman.plot(post_burned)
+
+
 
 # library(coda)
 # print(effectiveSize(samples))

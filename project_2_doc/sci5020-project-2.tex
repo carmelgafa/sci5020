@@ -228,8 +228,37 @@ The Gelman-Rubin diagnostic was also examined. Figure~\ref{fig:img-gelman-plot-b
 \end{figure}
 
 
-
 Based on these observations, a burn-in of 6000 iterations was selected to ensure that only samples drawn from the stationary portion of the chains were retained for posterior inference.
+
+
+The following snippet shows the execution of the model and creation of the plot used in this analysis
+
+\begin{lstlisting}
+n_chains <- 3
+n_burnin <- 200
+n_samples <- 15000
+parameters_to_monitor <- c("beta0", "beta1", "beta2", "beta3", "tau")
+
+initial_values <- list(
+list(beta0 = -10, beta1 = 0.5, beta2 = 0.1, beta3 = 0.05, tau = 0.5),
+list(beta0 = 0,   beta1 = 1,   beta2 = 0.3, beta3 = 0.1,  tau = 1),
+list(beta0 = 10,  beta1 = 2,   beta2 = 0.5, beta3 = 0.2,  tau = 2)
+)
+
+model <- jags.model(textConnection(model_description),
+data = jags_data,
+inits = initial_values,
+n.chains = n_chains)
+
+post <- coda.samples(model = model,
+variable.names = parameters_to_monitor,
+n.iter = n_samples,
+thin = 20)
+
+post_burned <- window(post, start = n_burnin)
+print(summary(post_burned))
+plot(post_burned[, "beta0"], main="beta0 -- Intercept")
+\end{lstlisting}
 
 
 
@@ -238,6 +267,61 @@ Based on these observations, a burn-in of 6000 iterations was selected to ensure
 	\item Convergence diagnostics (e.g., trace plots, Gelman-Rubin statistics)
 	\item Accuracy diagnostics (e.g., effective sample size, autocorrelation)
 \end{itemize}}
+
+
+The Figures below illustrate convergence diagnostics for all monitored parameters in the model. Trace plots are shown after discarding an initial burn-in of 200 samples, highlighting chain behaviour and visual mixing. Additionally, Gelman-Rubin diagnostic plots are presented both after a burn-in of 200 samples and after a more conservative burn-in of 6000 samples. These plots allow for a comparative evaluation of convergence, confirming that the longer burn-in more effectively removed transient behaviour and yielded PSRF values stabilising around 1.00 across all parameters.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-trace-beta0}
+	\caption{Trace and posterior density plots for the parameter $\beta_0$ (Intercept). The trace plot shows samples from three chains with good mixing and no signs of divergence or drift. All chains fluctuate around a common central value and remain tightly overlapped throughout the sampling period, a sign of stable convergence. The density plot shows a unimodal posterior distribution, peaking near 5.0 and spanning a broad range from approximately 2 to 8. The shape of the curve is slightly asymmetric near the peak, but remains smooth overall. The rug plot confirms dense and well-distributed sampling, supporting a reliable estimate of the intercept parameter. This indicates that the model has effectively identified a stable posterior distribution for $\beta_0$.}
+	\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-trace-beta1}
+	\caption{Trace and posterior density plots for the parameter $\beta_1$ (Cement). The trace plot on the left displays samples from three Markov Chain Monte Carlo (MCMC) chains. These chains show good mixing, with overlapping fluctuations around a stable mean after a burn-in period of 200 iterations. There is no visible drift or separation between the chains, and each chain explores the same region of the parameter space, indicating that convergence for $\beta_1$ has been achieved. The density plot on the right illustrates a smooth, unimodal posterior distribution, with the majority of the probability mass concentrated between approximately 0.060 and 0.078, peaking near 0.069. This suggests a strong positive effect of cement on concrete compressive strength.}
+	\label{fig:img-trace-beta1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-trace-beta2}
+	\caption{Trace and posterior density plots for the parameter $\beta_2$ (Superplasticizer). The trace plot shows three well-mixed chains with no indications of divergence, upward drift, or chain separation. The chains overlap consistently and fluctuate around a common mean, showing convergence and stationarity. The posterior density plot is unimodal, with the distribution between approximately 0.95 and 1.25, and a peak near 1.11. The curve is slightly asymmetric, with a marginally longer right tail, indicating slight skewness in the posterior. The rug plot confirms that sampling was dense and thorough across the high-probability region. These results indicate a stable and significant positive effect of superplasticizer on concrete compressive strength.}
+	\label{fig:img-trace-beta2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-trace-beta3}
+	\caption{Trace and posterior density plots for the parameter $\beta_3$ (Age). The trace plot on the left displays three MCMC chains,exhibiting stable mixing  with consistent fluctuations around a common central value, thus indicating convergence. The density plot on the right shows a unimodal posterior distribution concentrated between approximately 0.085 and 0.110. While the distribution has a clearly defined peak near 0.098, a slight asymmetry is visible near the mode, with a more gradual slope on the right side, indicating mild skewness. The rug plot confirms a dense and even sampling of values, supporting a reliable and stable estimate for the effect of age on compressive strength.}
+	\label{fig:img-trace-beta3}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-trace-tao}
+	\caption{Trace and posterior density plots for the parameter $\tau$ (precision of the normal likelihood). The trace plot shows good chain mixing and stationarity across all three chains, with no divergence, drift, or separation after burn-in. Fluctuations are consistently centred around a stable mean, showing convergence. The posterior density plot reveals a narrow and sharply peaked unimodal distribution concentrated between approximately 0.0063 and 0.0078, peaking near 0.0069, showing a tightly constrained estimate of the model’s residual precision. The rug plot below the density curve confirms dense and stable sampling from the posterior. This supports reliable inference for the precision parameter $\tau$.}
+	\label{fig:img-trace-tao}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-gelman-plot-all}
+	\caption{Gelman--Rubin diagnostic plots for all monitored parameters: intercept, cement, superplasticizer, age, and precision. The plots show the evolution of the shrink factor across increasing chain lengths. All parameters converge to Potential Scale Reduction Factor values close to 1.00 with their 97.5\% confidence intervals stabilising below 1.05. Convergence for all parameters appears to occur around iteration 6000, after which the shrink factors remain flat and close to unity. This shows that the chains for all parameters have likely converged to the same posterior distribution and that no substantial between-chain variation remains.}
+	\label{fig:img-gelman-plot-all}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-gelman-plot-all-bi}
+	\caption{Gelman-Rubin diagnostic plots for all monitored parameters following the removal of the first 6000 iterations as burn-in. After burn-in, all parameters show Potential Scale Reduction Factor values stabilising near 1.00, with their 97.5\% confidence intervals remaining below 1.05, indicating convergence. This confirms that discarding the initial 6000 iterations was effective in eliminating non-stationary behaviour, and that the retained samples are representative of the joint posterior distribution.}	\label{fig:img-gelman-plot-all-bi}
+\end{figure}
+
 
 \subsection{A discussion of the posterior distributions obtained from the analysis based on the
 plots and summary statistics (which need to be presented in the text). Discuss also
