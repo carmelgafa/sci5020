@@ -323,12 +323,93 @@ The Figures below illustrate convergence diagnostics for all monitored parameter
 \end{figure}
 
 
+To assess the reliability and efficiency of the Markov Chain Monte Carlo sampling process, we examined two key accuracy diagnostics: effective sample size  and autocorrelation of the samples.
+
+The effective sample sizes for all parameters were obtained using the summary() function on the Markov Chain Monte Carlo output object.
+
+The effective sample size tells us how many of the samples from the Markov Chain Monte Carlo simulation are as useful as completely independent values. This is important because, in Markov Chain Monte Carlo, the samples are usually correlated, meaning each one is slightly influenced by the one before it. So, even if we run many iterations, the actual amount of "independent information" is lower.
+In this analysis, each chain had about 451 effective samples for each parameter after discarding the burn-in and applying thinning (keeping every 20th sample). Since we ran three chains, that means we had over 1300 effective samples per parameter, meaning that the Markov Chain Monte Carlo sampling worked well and gave us enough reliable information to make accurate conclusions from the posterior distributions.
+
+The time-series standard errors were small for all parameters (e.g., $\beta_0$: 0.030, $\beta_1$: 0.000098, $\beta_2$: 0.00164), confirming high sampling precision and low Monte Carlo error. These diagnostics collectively indicate that the model's parameter estimates are stable, reliable, and based on an efficient sampling process.
+
+
+\begin{figure}{H}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-summary}
+	\caption{Summary statistics for all model parameters after burn-in and thinning.}	
+	\label{fig:img-summary}
+\end{figure}
+
+
+Autocorrelation plots are used to assess how much each sample in a Markov Chain Monte Carlo simulation depends on the samples that came before it. In a well-mixed Markov Chain Monte Carlo chain, we expect the correlation between successive samples to decline rapidly as the lag increases; that is, samples become effectively independent as we move further apart along the chain. In an autocorrelation plot, each vertical bar represents the correlation at a particular lag. A plot showing high autocorrelation across many lags indicates poor mixing and slow convergence, while a plot where autocorrelation drops quickly to near zero suggests good mixing and efficient sampling. Ideally, the autocorrelation should be close to zero after just a few lags, indicating that the chain is exploring the posterior distribution effectively and that the resulting samples are reliable for inference.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-beta0}
+	\caption{Autocorrelation plot for MCMC samples of $\beta_0$. The plot shows a rapid decline in autocorrelation after lag 1, with subsequent lags fluctuating closely around zero. This pattern indicates  minimal serial correlation and suggests that the chain for $\beta_0$ mixes well, resulting in effectively independent samples suitable for posterior inference.}
+	\label{fig:img-autocorr-beta0}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-beta1}
+	\caption{Autocorrelation plot for MCMC samples of $\beta_1$. As with $\beta_0$, the autocorrelation drops steeply after the first lag and remains near zero thereafter, confirming low intra-chain dependence and high sampling efficiency, implying that the posterior samples for $\beta_1$ are reliable and representative of the target distribution.}
+	\label{fig:img-autocorr-beta1}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-beta2}
+	\caption{Autocorrelation plot for MCMC samples of $\beta_2$. The autocorrelation declines sharply after lag 1 and quickly levels off near zero for subsequent lags. This pattern indicates low dependence between successive samples and effective mixing of the chain, supporting the reliability of the posterior estimates for $\beta_2$.}
+	\label{fig:img-autocorr-beta2}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-beta3}
+	\caption{Autocorrelation plot for MCMC samples of $\beta_3$. The autocorrelation rapidly decays after lag 1 and remains close to zero for all subsequent lags, indicating minimal correlation between samples. This suggests that the MCMC chains for $\beta_3$ are mixing efficiently and producing effectively independent samples.}
+	\label{fig:img-autocorr-beta3}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-tao}
+	\caption{Autocorrelation plot for MCMC samples of $\tau$ (precision parameter). The autocorrelation drops steeply after lag 1 and fluctuates around zero for all subsequent lags, suggesting low serial correlation. This indicates that the MCMC sampler produced nearly independent draws, supporting efficient posterior estimation for the precision.}
+	\label{fig:img-autocorr-tao}
+\end{figure}
+
+
+
 \subsection{A discussion of the posterior distributions obtained from the analysis based on the
 plots and summary statistics (which need to be presented in the text). Discuss also
 how the posterior distributions of the model parameters can be used to predict new
 values of the response variable Y, given only values for the explanatory variables
 are available (prediction problem). Include both the interpretation of the parameter
 uncertainty and how it propagates into predictions for new observations.}
+
+
+
+The Bayesian linear regression model produced posterior distributions for all parameters; the intercept $\beta_0$, and the coefficients for cement ($\beta_1$), superplasticizer ($\beta_2$), and age ($\beta_3$), along with the residual precision parameter $\tau$. The posterior summaries indicate how each predictor is associated with the concrete compressive strength after accounting for uncertainty and prior beliefs.
+
+Table~\ref{tab:posterior_summaries} presents the posterior mean, standard deviation, and the 95\% credible interval for each parameter. None of the 95\% credible intervals include 0, which suggests that all predictors have a statistically meaningful association with the response variable. The posterior distributions reveal meaningful associations between the predictors and the response variable. The cement coefficient ($\beta_1$) has a positive mean effect with a narrow credible interval, indicating a consistent and stable contribution of cement to compressive strength. The effect of superplasticizer ($\beta_2$) remains the most prominent, with its posterior centred substantially away from zero, suggesting a strong and reliably positive influence. The age coefficient ($\beta_3$) is modest but tightly concentrated, implying that even small increases in curing time yield measurable improvements in strength. The intercept term ($\beta_0$) exhibits greater variability, reflecting the model's baseline uncertainty when predictors are near zero. Finally, the residual precision parameter ($\tau$) results in a relatively narrow distribution, indicating a well-estimated error structure and providing confidence in the model's predictive consistency. Collectively, these posterior characteristics reinforce the significance of each predictor while quantifying their uncertainty, supporting robust and interpretable inference.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		\textbf{Parameter} & \textbf{Posterior Mean} & \textbf{SD} & \textbf{95\% Credible Interval} \\ \hline
+		$\beta_0$ (Intercept) & 4.672 & 11.23 & [2.714,\;7.294] \\ \hline
+		$\beta_1$ (Cement)    & 0.070 & 0.035 & [0.062,\;0.076] \\ \hline
+		$\beta_2$ (Superplasticizer) & 1.116 & 0.101 & [0.988,\;1.243] \\ \hline
+		$\beta_3$ (Age)       & 0.098 & 0.007 & [0.087,\;0.110] \\ \hline
+		$\tau$ (Precision)    & 0.00689 & 0.00037 & [0.00632,\;0.00750] \\ \hline
+	\end{tabular}
+	\caption{Posterior means, standard deviations, and 95\% credible intervals.}
+	\label{tab:posterior_summaries}
+\end{table}
+
 
 \subsection{Also present the R script, including comments that explain what each section does in
 an appendix. }

@@ -56,6 +56,12 @@ post_burned <- window(post, start = n_burnin)
 
 print("Summary of posterior samples")
 print(summary(post_burned))
+autocorr.plot(post_burned[, "beta0"])
+autocorr.plot(post_burned[, "beta1"])
+autocorr.plot(post_burned[, "beta2"])
+autocorr.plot(post_burned[, "beta3"])
+autocorr.plot(post_burned[, "tau"])
+
 
 # plot(post_burned[, "beta0"], main="beta0 -- Intercept")
 # plot(post_burned[, "beta1"], main="beta1 -- Cement")
@@ -72,8 +78,6 @@ print(summary(post_burned))
 
 # library(coda)
 # print(effectiveSize(samples))
-
-
 
 # # Extract posterior samples from coda object
 # samples_matrix <- as.matrix(samples)
