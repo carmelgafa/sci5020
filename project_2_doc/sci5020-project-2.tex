@@ -24,7 +24,7 @@
 
 %opening
 \title{Principles of statistical inference project - Part 2}
-\author{Carmel Gafaż}
+\author{Carmel Gafa}
 
 \begin{document}
 
@@ -45,7 +45,7 @@
 variables (more is better). Once you have selected a dataset, send the link via email to Dr.
 Monique Borg Inguanez (monique.inguanez@um.edu.mt) for approval, ensuring that each
 student works with a unique dataset.
-Using the approved dataset, fit a Bayesian multiple linear regression model (p < 2) using
+Using the approved dataset, fit a Bayesian multiple linear regression model ($p < 2$) using
 JAGS.
 Your submission should clearly include the following:}
 
@@ -204,7 +204,7 @@ The priors were selected to reflect minimal assumptions about the parameter valu
 \subsection{The selected burn-in period for your MCMC chains, including a detailed explanation
 of how this was chosen.}
 
-In Bayesian analysis using Markov Chain Monte Carlo, the initial samples of each chain will, in most cases, not reflect the target posterior distribution, and the chain will settle into the posterior distribution after a number of samples. This early phase is known as the burn-in period. These initial samples are discarded before subsequent analysis, as they would bias the results.
+%In Bayesian analysis using Markov Chain Monte Carlo, the initial samples of each chain will, in most cases, not reflect the target posterior distribution, and the chain will settle into the posterior distribution after a number of samples. This early phase is known as the burn-in period. These initial samples are discarded before subsequent analysis, as they would bias the results.
 
 Trace plots are the first tool that is used to determine a suitable burn-in period. In this analysis, we examine chain mixing, which the overlap of the chain samples can visually assess, and compactness within the chain samples. Additionally, chain variations should be consistent around a central value. Trace plots, however, are subjective in interpretation and can indicate early convergence. Another tool that is then used is the Gelman-Rubin convergence diagnostic, which utilises both between-chain and within-chain variance to assess convergence.
 
@@ -316,10 +316,20 @@ The Figures below illustrate convergence diagnostics for all monitored parameter
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-gelman-plot-all-bi}
 	\caption{Gelman-Rubin diagnostic plots for all monitored parameters following the removal of the first 6000 iterations as burn-in. After burn-in, all parameters show Potential Scale Reduction Factor values stabilising near 1.00, with their 97.5\% confidence intervals remaining below 1.05, indicating convergence. This confirms that discarding the initial 6000 iterations was effective in eliminating non-stationary behaviour, and that the retained samples are representative of the joint posterior distribution.}	\label{fig:img-gelman-plot-all-bi}
+\end{figure}
+
+
+The Gelman-Rubin Potential Scale Reduction Factor convergence diagnostic was also considered for accuracy. As shown in Figure all parameters have Potential Scale Reduction Factor point estimates equal to or very close to 1.00, with upper confidence limits not exceeding 1.03, confirming that the chains have mixed well and that the sampling process is stable and reliable for posterior inference.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-psrf}
+	\caption{Potential Scale Reduction Factor values for all monitored parameters. All point estimates are close to 1.00, and upper confidence intervals remain below the typically accepted threshold of 1.05, indicating convergence across chains for each parameter.}
+	\label{fig:img-psrf}
 \end{figure}
 
 
@@ -333,7 +343,7 @@ In this analysis, each chain had about 451 effective samples for each parameter 
 The time-series standard errors were small for all parameters (e.g., $\beta_0$: 0.030, $\beta_1$: 0.000098, $\beta_2$: 0.00164), confirming high sampling precision and low Monte Carlo error. These diagnostics collectively indicate that the model's parameter estimates are stable, reliable, and based on an efficient sampling process.
 
 
-\begin{figure}{H}
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-summary}
 	\caption{Summary statistics for all model parameters after burn-in and thinning.}	
@@ -393,27 +403,257 @@ uncertainty and how it propagates into predictions for new observations.}
 
 The Bayesian linear regression model produced posterior distributions for all parameters; the intercept $\beta_0$, and the coefficients for cement ($\beta_1$), superplasticizer ($\beta_2$), and age ($\beta_3$), along with the residual precision parameter $\tau$. The posterior summaries indicate how each predictor is associated with the concrete compressive strength after accounting for uncertainty and prior beliefs.
 
-Table~\ref{tab:posterior_summaries} presents the posterior mean, standard deviation, and the 95\% credible interval for each parameter. None of the 95\% credible intervals include 0, which suggests that all predictors have a statistically meaningful association with the response variable. The posterior distributions reveal meaningful associations between the predictors and the response variable. The cement coefficient ($\beta_1$) has a positive mean effect with a narrow credible interval, indicating a consistent and stable contribution of cement to compressive strength. The effect of superplasticizer ($\beta_2$) remains the most prominent, with its posterior centred substantially away from zero, suggesting a strong and reliably positive influence. The age coefficient ($\beta_3$) is modest but tightly concentrated, implying that even small increases in curing time yield measurable improvements in strength. The intercept term ($\beta_0$) exhibits greater variability, reflecting the model's baseline uncertainty when predictors are near zero. Finally, the residual precision parameter ($\tau$) results in a relatively narrow distribution, indicating a well-estimated error structure and providing confidence in the model's predictive consistency. Collectively, these posterior characteristics reinforce the significance of each predictor while quantifying their uncertainty, supporting robust and interpretable inference.
+Table~\ref{tab:posterior_summary} presents the posterior mean, standard deviation, and the 95\% credible interval for each parameter. None of the 95\% credible intervals include 0, which suggests that all predictors have a statistically meaningful association with the response variable. The posterior distributions reveal meaningful associations between the predictors and the response variable. The cement coefficient ($\beta_1$) has a positive mean effect with a narrow credible interval, indicating a consistent and stable contribution of cement to compressive strength. The effect of superplasticizer ($\beta_2$) remains the most prominent, with its posterior centred substantially away from zero, suggesting a strong and reliably positive influence. The age coefficient ($\beta_3$) is modest but tightly concentrated, implying that even small increases in curing time yield measurable improvements in strength. The intercept term ($\beta_0$) exhibits greater variability, reflecting the model's baseline uncertainty when predictors are near zero. Finally, the residual precision parameter ($\tau$) results in a relatively narrow distribution, indicating a well-estimated error structure and providing confidence in the model's predictive consistency. Collectively, these posterior characteristics reinforce the significance of each predictor while quantifying their uncertainty, supporting robust and interpretable inference.
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|l|c|c|c|}
+	\begin{tabular}{|l|r|r|c|}
 		\hline
-		\textbf{Parameter} & \textbf{Posterior Mean} & \textbf{SD} & \textbf{95\% Credible Interval} \\ \hline
-		$\beta_0$ (Intercept) & 4.672 & 11.23 & [2.714,\;7.294] \\ \hline
-		$\beta_1$ (Cement)    & 0.070 & 0.035 & [0.062,\;0.076] \\ \hline
-		$\beta_2$ (Superplasticizer) & 1.116 & 0.101 & [0.988,\;1.243] \\ \hline
-		$\beta_3$ (Age)       & 0.098 & 0.007 & [0.087,\;0.110] \\ \hline
-		$\tau$ (Precision)    & 0.00689 & 0.00037 & [0.00632,\;0.00750] \\ \hline
+		\textbf{Parameter} & \textbf{Posterior Mean} & \textbf{SD} & \textbf{95\% Credible Interval} \\
+		\hline
+		$\beta_0$ (Intercept)         & 5.069 & 1.105 & [2.995, 7.325] \\
+		$\beta_1$ (Cement)            & 0.0689 & 0.0035 & [0.062, 0.076] \\
+		$\beta_2$ (Superplasticizer)  & 1.112 & 0.063 & [0.984, 1.243] \\
+		$\beta_3$ (Age)               & 0.0980 & 0.0061 & [0.086, 0.110] \\
+		$\tau$ (Precision)            & 0.00689 & 0.00031 & [0.00628, 0.00750] \\
+		\hline
 	\end{tabular}
 	\caption{Posterior means, standard deviations, and 95\% credible intervals.}
-	\label{tab:posterior_summaries}
+	\label{tab:posterior_summary}
 \end{table}
 
+
+The following code was implemented to predict new values of the response variable:
+
+\begin{lstlisting}
+
+#extract post samples -- generate a bunch of samples for each posterior distribution
+samples_matrix <- as.matrix(post_burned)
+
+#new values --
+x_new <- c(300, 8, 28)
+
+#compute mu for each -- scale the samples with the example values
+mu_pred <- samples_matrix[, "beta0"] +
+samples_matrix[, "beta1"] * x_new[1] +
+samples_matrix[, "beta2"] * x_new[2] +
+samples_matrix[, "beta3"] * x_new[3]
+
+#distrib of pred mean --> distr of outcomes by adding resdl noise
+tau_samples <- samples_matrix[, "tau"]
+y_pred <- rnorm(length(mu_pred), mean = mu_pred, sd = 1 / sqrt(tau_samples))
+
+print("Summary of prediction")
+print(summary(y_pred))
+print(quantile(y_pred, c(0.025, 0.5, 0.975)))
+
+
+df <- data.frame(
+predictive = y_pred,
+expected = mu_pred
+)
+
+
+plt <- ggplot(df, aes(x = predictive)) +
+geom_density(fill = "skyblue", alpha = 0.5) +
+geom_vline(aes(xintercept = mean(predictive)), color = "blue", linetype = "dashed") +
+geom_vline(aes(xintercept = quantile(predictive, 0.025)), linetype = "dotted") +
+geom_vline(aes(xintercept = quantile(predictive, 0.975)), linetype = "dotted") +
+labs(title = "Posterior Predictive Distribution",
+x = "Predicted Strength (MPa)", y = "Density") +
+theme_minimal()
+plot(plt)
+\end{lstlisting}
+
+
+\begin{itemize}
+	\item To predict the compressive strength of a new concrete mix, the posterior distributions of the regression coefficients obtained from Markov Chain Monte Carlo sampling were used.
+	
+	\item Values for example predictor variables were specified (cement = 300, superplasticizer = 8, age = 28).
+	
+	\item For each posterior sample, a predicted linear mean $\mu_{\text{pred}}$ was computed using:
+	$$
+	\mu_{\text{pred}} = \beta_0 + \beta_1 x_{\text{cement}} + \beta_2 x_{\text{superplasticizer}} + \beta_3 x_{\text{age}}
+	$$
+	
+	\item Using $\mu_{\text{pred}}$, the corresponding predicted value $y_{\text{pred}}$ was then drawn from a normal distribution:
+	$$
+	y_{\text{pred}} \sim \mathcal{N}(\mu_{\text{pred}}, \tau^{-1})
+	$$
+	where $\tau$ is the posterior precision from each sample.
+	\item This procedure accounts for both parameter uncertainty and residual noise in generating predictive values.
+	\item A summary of the predictive distribution, including mean and 95\% credible interval, was computed and visualised.
+\end{itemize}
+
+
+Figure \ref{fig:img-post-mean-pred} shows the distributions of the expected mean response and posterior prediction. ThFigure \ref{fig:img-post-mean-pred} illustrates the distributions of the expected mean response and posterior predictions. The expected mean response is tightly concentrated, reflecting certainty around the average response. In contrast, the predictive distribution is flatter due to noise in the observations.e former is, as expected, tightly concentrated, thus reflecting certainty around the average response. The predictive distribution is flatter due to noise in the observations.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-post-mean-pred}
+	\caption{Comparison between the posterior predictive distribution and the distribution of the expected mean response. The narrow orange curve represents the distribution of the predicted mean response $\mu$ based on posterior samples of the model parameters. The wider blue curve shows the posterior predictive distribution for new observations, which incorporates both parameter uncertainty and residual noise. The increased spread in the predictive distribution reflects the variability expected in real-world observations.}
+	\label{fig:img-post-mean-pred}
+\end{figure}
 
 \subsection{Also present the R script, including comments that explain what each section does in
 an appendix. }
 
+\begin{itemize}
+	\item The code is available in the following GitHub repository: \\ \texttt{https://github.com/carmelgafa/sci5020.}
+	\item It was developed using Visual Studio Code alongside the VSCode R extension. Some minor precautions, such as printing to a variable, were necessary during development.
+	\item The code was tested using R version 4.4.2.
+	\item The code can be found in Appendix \ref{appendix:a}
+\end{itemize}
 
+
+
+\appendix
+
+\section{Question 1 code} \label{appendix:a}
+
+\begin{lstlisting}
+library(rjags)
+library(lattice)
+library(ggplot2)
+library(coda)
+
+#load dataset
+script_dir <- getwd()
+concrete_cleansed_path <- file.path(
+script_dir,
+"project_2_code/concrete_cleansed.csv"
+)
+concrete_cleansed <- read.csv(concrete_cleansed_path)
+
+jags_data <- list(
+x_cement = concrete_cleansed$cement,
+x_superplasticizer = concrete_cleansed$superplasticizer,
+x_age = concrete_cleansed$age,
+y_strength = concrete_cleansed$strength,
+n = nrow(concrete_cleansed)
+)
+
+#define model
+model_description <- "
+model {
+	for (i in 1:n) {
+		y_strength[i] ~ dnorm(mu[i], tau)
+		mu[i] <- beta0 +
+		(beta1 * x_cement[i]) +
+		(beta2 * x_superplasticizer[i]) +
+		(beta3 * x_age[i])
+	}
+	beta0 ~ dnorm(0, 0.01)
+	beta1 ~ dnorm(0, 0.01)
+	beta2 ~ dnorm(0, 0.01)
+	beta3 ~ dnorm(0, 0.01)
+	tau ~ dgamma(0.01, 0.01)
+} "
+
+#params
+n_chains <- 3
+n_burnin <- 6000
+n_samples <- 15000
+parameters_to_monitor <- c("beta0", "beta1", "beta2", "beta3", "tau")
+initial_values <- list(
+list(beta0 = -10, beta1 = 0.5, beta2 = 0.1, beta3 = 0.05, tau = 0.5),
+list(beta0 = 0,   beta1 = 1,   beta2 = 0.3, beta3 = 0.1,  tau = 1),
+list(beta0 = 10,  beta1 = 2,   beta2 = 0.5, beta3 = 0.2,  tau = 2)
+)
+
+#create the jags model
+model <- jags.model(
+textConnection(model_description),
+data = jags_data,
+inits = initial_values,
+n.chains = n_chains
+)
+
+#posterior samples from jgs model
+post <- coda.samples(model = model,
+variable.names = parameters_to_monitor,
+n.iter = n_samples,
+thin = 20)
+
+
+#throw away burnin samples
+post_burned <- window(post, start = n_burnin)
+
+#posterior summary
+print(summary(post_burned))
+
+#autocorr mcmc samples
+autocorr.plot(post_burned[, "beta0"])   
+autocorr.plot(post_burned[, "beta1"])
+autocorr.plot(post_burned[, "beta2"])
+autocorr.plot(post_burned[, "beta3"])
+autocorr.plot(post_burned[, "tau"])
+
+#density plts
+plot(post_burned[, "beta0"], main="beta0 -- Intercept")
+plot(post_burned[, "beta1"], main="beta1 -- Cement")
+plot(post_burned[, "beta2"], main="beta2 -- Superplasticizer")
+plot(post_burned[, "beta3"], main="beta3 -- Age")
+plot(post_burned[, "tau"], main="tau -- Precision")
+
+
+print(gelman.diag(post))
+gelman.plot(post_burned[, "beta0"])
+gelman.plot(post_burned)
+
+
+
+print(effectiveSize(post_burned))
+
+#extract post samples -- generate a bunch of samples for each posterior distribution
+samples_matrix <- as.matrix(post_burned)
+
+#new values --
+x_new <- c(300, 8, 28)
+
+#compute mu for each -- scale the samples with the example values
+mu_pred <- samples_matrix[, "beta0"] +
+samples_matrix[, "beta1"] * x_new[1] +
+samples_matrix[, "beta2"] * x_new[2] +
+samples_matrix[, "beta3"] * x_new[3]
+
+#distrib of pred mean --> distr of outcomes by adding resdl noise
+tau_samples <- samples_matrix[, "tau"]
+y_pred <- rnorm(length(mu_pred), mean = mu_pred, sd = 1 / sqrt(tau_samples))
+
+print("Summary of prediction")
+print(summary(y_pred))
+print(quantile(y_pred, c(0.025, 0.5, 0.975)))
+
+
+df <- data.frame(
+predictive = y_pred,
+expected = mu_pred
+)
+
+
+plt <- ggplot(df) +
+geom_density(aes(x = predictive, color = "Predictive")) +
+geom_density(aes(x = expected, color = "Expected Mean")) +
+labs(title = "Posterior Predictive vs Expected Mean",
+x = "Predicted Strength (MPa)",
+y = "Density",
+color = "Line Type") +
+theme_minimal() +
+scale_color_manual(values = c("Predictive" = "skyblue", "Expected Mean" = "orange")) +
+scale_x_continuous(limits = c(min(df), max(df)))
+print(plt)
+
+
+plt <- ggplot(df, aes(x = predictive)) +
+geom_density(fill = "skyblue", alpha = 0.5) +
+geom_vline(aes(xintercept = mean(predictive)), color = "blue", linetype = "dashed") +
+geom_vline(aes(xintercept = quantile(predictive, 0.025)), linetype = "dotted") +
+geom_vline(aes(xintercept = quantile(predictive, 0.975)), linetype = "dotted") +
+labs(title = "Posterior Predictive Distribution",
+x = "Predicted Strength (MPa)", y = "Density") +
+theme_minimal()
+plot(plt)	
+\end{lstlisting}
 
 \end{document}
