@@ -541,74 +541,199 @@ $$
 
 \noindent \textbf{Recap of problem statement:}\\
 
-Letting $\mathbf{x} = (x_1, x_2, \dots, x_n)'$ be a vector of observed data points, we create a Bayesian model where the data is assumed to be generated from a Normal distribution with unknown mean $\mu$ and unknown variance $\sigma^2$:
+Let $\mathbf{x} = (x_1, x_2, \dots, x_n)'$ be defined as a vector of observed data points. A Bayesian model is considered, in which the data are assumed to be generated from a Normal distribution with an unknown mean $\mu$ and unknown variance $\sigma^2$:
 $$
 x_i \mid \mu, \sigma^2 \sim \mathcal{N}(\mu, \sigma^2), \quad i = 1, \dots, n
 $$
 
-We employ a Bayesian approach and set prior distributions for the unknown parameters $\mu$ and $\sigma^2$. Specifically, we place a Normal prior on the mean $\mu$ and a Gamma prior on the precision $\tau = \sigma^{-2}$:
+A Bayesian approach is adopted, and prior distributions are specified for the unknown parameters $\mu$ and $\sigma^2$. Specifically, a Normal prior is placed on the mean $\mu$, and a Gamma prior is assigned to the precision $\tau = \sigma^{-2}$:
+$$
+\mu \mid \tau \sim \mathcal{N}(m_0, v_0^2), \quad \tau \sim \text{Gamma}(a, b)
+$$
+
+In this hierarchical Bayesian model, a Normal prior is assigned to the mean $\mu$ conditional on the precision $\tau$, and a Gamma prior is placed on $\tau$. This results in the following joint prior:
+$$
+p(\mu, \tau) = p(\mu \mid \tau) \cdot p(\tau)
+$$
+
+By using conjugate priors, it is ensured that the posterior distributions for $\mu$ and $\tau$ remain in standard, tractable forms (Normal and Gamma), thereby facilitating efficient sampling through the Gibbs sampling method.
+
+The complete joint posterior distribution $p(\mu, \tau \mid \mathbf{x})$ is not known in closed form. However, the theory of conjugate priors allows the full conditional distributions to be derived analytically:
+
+\begin{itemize}
+	\item The conditional posterior distribution of $\mu$ given $\tau$ and $\mathbf{x}$ is a Normal distribution:
+	$$
+	\mu \mid \mathbf{x}, \tau \sim \mathcal{N}\left( \frac{n \bar{x} + v_0^{-2} m_0}{n + v_0^{-2}}, \left(n + v_0^{-2} \right)^{-1} \right)
+	$$
+	\item The conditional posterior distribution of $\tau$ given $\mu$ and $\mathbf{x}$ is a Gamma distribution:
+	$$
+	\tau \mid \mathbf{x}, \mu \sim \text{Gamma} \left( a + \frac{n}{2}, \; b + \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 \right)
+	$$
+\end{itemize}
+
+\noindent These conditional distributions constitute the foundation of a Gibbs sampling algorithm, by which samples from the joint posterior can be obtained through iterative sampling.
+
+The implementation of this Bayesian model is now undertaken through the following steps:
+
+\begin{enumerate}
+	\item[(i)] \textbf{Simulation of data.} Fixed values are selected for $\mu$ and $\sigma^2$, and 100 observations are drawn from a Normal distribution with the specified parameters:
+	$$
+	x_i \sim \mathcal{N}(\mu, \sigma^2), \quad i = 1, \ldots, 100
+	$$
+	
+	\item[(ii)] \textbf{Specification of priors.} Hyperparameters $m_0$, $v_0^2$, $a$, and $b$ are chosen to reflect non-informative prior beliefs about $\mu$ and $\tau$. For instance:
+	$$
+	m_0 = 0, \quad v_0^2 = 10^6, \quad a = b = 0.01
+	$$
+	
+	\item[(iii)] \textbf{Execution of Gibbs sampling.} An initial value $\tau^{(0)}$ is selected. Gibbs sampling is then used to generate 10{,}000 samples from the joint posterior of $\mu$ and $\tau$. At each iteration $t$, the following steps are performed:
+	$$
+	\mu^{(t)} \sim \mathcal{N}\left( \frac{n \bar{x} + v_0^{-2} m_0}{n + v_0^{-2}}, \left(\tau^{(t-1)}(n + v_0^{-2})\right)^{-1} \right)
+	$$
+	$$
+	\tau^{(t)} \sim \text{Gamma} \left( a + \frac{n}{2}, \; b + \frac{1}{2} \sum_{i=1}^n (x_i - \mu^{(t)})^2 \right)
+	$$
+	A suitable number of initial samples are discarded as burn-in.
+	
+	\item[(iv)] \textbf{Assessment of convergence.} Diagnostic tools are used to evaluate whether the chains have converged and whether the burn-in period has been sufficient. In particular:
+	\begin{itemize}
+		\item A \texttt{traceplot} is produced for the sampled values of $\mu$ and $\tau$.
+		\item The \texttt{autocorrelation function (ACF)} is examined to assess correlation between successive samples.
+		\item The \texttt{effective sample size (ESS)} is computed to estimate the number of effectively independent draws.
+	\end{itemize}
+	These diagnostics are used to determine the adequacy of convergence and burn-in.
+	
+	\item[(v)] \textbf{Summarization of posterior distributions.} The \texttt{epdfPlot} function from the \texttt{EnvStats} package in R is employed to produce empirical posterior density estimates for $\mu$, $\tau$, and $\sigma^2 = \tau^{-1}$, using only post-burn-in samples.
+\end{enumerate}
+
+
+
+%The goal of Bayesian inference is to compute the posterior distribution of the parameters given the data:
+%
+%$$
+%p(\mu, \tau \mid \mathbf{x}) \propto p(\mathbf{x} \mid \mu, \tau) \cdot p(\mu \mid \tau) \cdot p(\tau)
+%$$
+%
+%The likelihood function for the independent normal observations is:
+%
+%$$
+%p(\mathbf{x} \mid \mu, \tau) = \prod_{i=1}^n \left( \frac{\sqrt{\tau}}{\sqrt{2\pi}} \exp\left( -\frac{\tau}{2}(x_i - \mu)^2 \right) \right)
+%$$
+%
+%Taking the product:
+%
+%$$
+%p(\mathbf{x} \mid \mu, \tau) \propto \tau^{n/2} \exp\left( -\frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 \right)
+%$$
+%
+%
+%\[
+%p(\mu \mid \tau) = \sqrt{\frac{\tau}{2\pi v_0^2}} \exp\left( -\frac{\tau}{2v_0^2} (\mu - m_0)^2 \right)
+%\]
+%
+%The prior on $\tau$ is:
+%
+%$$
+%p(\tau) \propto \tau^{a - 1} e^{-b\tau}
+%$$
+%
+%Therefore, the joint posterior is:
+%
+%$$
+%p(\mu, \tau \mid \mathbf{x}) \propto \tau^{n/2} \exp\left( -\frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 \right) \cdot \tau^{1/2} \exp\left( -\frac{\tau}{2v_0^2} (\mu - m_0)^2 \right) \cdot \tau^{a-1} e^{-b\tau}
+%$$
+%	
+%Combining powers of $\tau$:
+%
+%$$
+%p(\mu, \tau \mid \mathbf{x}) \propto \tau^{a + \frac{n+1}{2} - 1} \exp\left( -\tau \left[ \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 + \frac{1}{2v_0^2} (\mu - m_0)^2 + b \right] \right)
+%$$
+%
+
+
+\subsection{Decide on values for $\mu$ and $\sigma^2$ and simulate 100 values from a normal distribution with this mean and variance.}
+
+
+\noindent \textbf{Part (i): Simulation of Data}
+
+A dataset consisting of $n = 100$ observations was simulated from a normal distribution with mean $\mu = 5$ and variance $\sigma^2 = 4$. 
+
+The resulting histogram of the simulated data confirms the approximate bell-shaped structure expected of normal distributions, centered around the mean.
+
+The following code was used for simulation and visualization:
+
+\begin{lstlisting}
+
+## Question i
+
+mu <- 5
+sigma_2 <- 4
+sigma <- sqrt(sigma_2)
+n <- 100
+
+set.seed(1001)
+x <- rnorm(n, mean = mu, sd = sigma)
+
+# Save histogram object (does not plot automatically)
+plt <- hist(x, breaks = 50, col = "skyblue", main = "Histogram of Simulated Data",
+xlab = "x values", border = "white", freq = FALSE)
+plot(plt)
+
+curve(dnorm(x, mean = mu, sd = sigma), col = "blue", lwd = 2, add = TRUE)
+\end{lstlisting}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-2-norm-dist}
+	\caption{Histogram of 100 simulated observations from a normal distribution with mean $\mu = 5$ and variance $\sigma^2 = 4$. The blue curve represents the theoretical density function of $\mathcal{N}(5, 2^2)$ superimposed on the histogram.}
+	\label{fig:img-2-norm-dist}
+\end{figure}
+
+
+\subsection{Decide on hyperparameters $m_0, v_0^2, a, b$ which yield a non-informative prior.}
+
+
+To use the Bayesian model, we need to define prior distributions for the unknown parameters $\mu$ and $\tau = \sigma^{-2}$. We will use a conjugate prior structure, which includes:
 
 $$
 \mu \mid \tau \sim \mathcal{N}(m_0, v_0^2), \quad \tau \sim \text{Gamma}(a, b)
 $$
 
-In this hierarchical Bayesian model, we place a Normal prior on the mean $\mu$ conditional on the precision $\tau$, and a Gamma prior on $\tau$. This leads to a joint prior:
+In this implementation, vague priors are used to show limited prior knowledge about the parameters. The following hyperparameter values are provided:
 
 $$
-p(\mu, \tau) = p(\mu \mid \tau) \cdot p(\tau)
+m_0 = 0, \quad v_0^2 = 10^6, \quad a = 0.01, \quad b = 0.01
 $$
 
-The use of conjugate priors guarantees that the posterior distributions for $\mu$ and $\tau$ maintain tractable, standard forms (Normal and Gamma), which makes efficient sampling via Gibbs sampling easier.
+This choice allows for a wide range of possible values for $\mu$, giving more weight to the data when making inferences. The Gamma prior on $\tau$ has a small shape and rate, creating a flat and broad distribution over all positive real numbers.
 
-The goal of Bayesian inference is to compute the posterior distribution of the parameters given the data:
+\noindent These prior choices ensure that the posterior distributions remain proper while contributing little information relative to the likelihood. This is a common strategy when the objective is to let the data primarily inform the inference.
 
-$$
-p(\mu, \tau \mid \mathbf{x}) \propto p(\mathbf{x} \mid \mu, \tau) \cdot p(\mu \mid \tau) \cdot p(\tau)
-$$
-
-The likelihood function for the independent normal observations is:
-
-$$
-p(\mathbf{x} \mid \mu, \tau) = \prod_{i=1}^n \left( \frac{\sqrt{\tau}}{\sqrt{2\pi}} \exp\left( -\frac{\tau}{2}(x_i - \mu)^2 \right) \right)
-$$
-
-Taking the product:
-
-$$
-p(\mathbf{x} \mid \mu, \tau) \propto \tau^{n/2} \exp\left( -\frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 \right)
-$$
+\begin{lstlisting}
+m0 <- 0
+v0_sq <- 1e6
+a <- 0.01
+b <- 0.01
+\end{lstlisting}
 
 
-\[
-p(\mu \mid \tau) = \sqrt{\frac{\tau}{2\pi v_0^2}} \exp\left( -\frac{\tau}{2v_0^2} (\mu - m_0)^2 \right)
-\]
-
-The prior on $\tau$ is:
-
-$$
-p(\tau) \propto \tau^{a - 1} e^{-b\tau}
-$$
-
-Therefore, the joint posterior is:
-
-$$
-p(\mu, \tau \mid \mathbf{x}) \propto \tau^{n/2} \exp\left( -\frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 \right) \cdot \tau^{1/2} \exp\left( -\frac{\tau}{2v_0^2} (\mu - m_0)^2 \right) \cdot \tau^{a-1} e^{-b\tau}
-$$
-
-Combining powers of $\tau$:
-
-$$
-p(\mu, \tau \mid \mathbf{x}) \propto \tau^{a + \frac{n+1}{2} - 1} \exp\left( -\tau \left[ \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 + \frac{1}{2v_0^2} (\mu - m_0)^2 + b \right] \right)
-$$
-
-
-
-\subsection{Decide on values for $\mu$ and $\sigma^2$ and simulate 100 values from a normal distribution with this mean and variance.}
-	
-\subsection{Decide on hyperparameters $m_0, v_0^2, a, b$ which yield a non-informative prior.}
 
 
 \subsection{Pick an initial value of $\tau$. Use Gibbs' sampling to simulate 10000 values of $\mu$ and $\tau$ (excluding an appropriately chosen burn-in period).}
+
+
+With the conditional posterior distributions derived analytically, a Gibbs sampling algorithm is implemented to simulate from the joint posterior of $(\mu, \tau)$. The full conditionals are:
+
+\begin{align*}
+	\mu \mid \mathbf{x}, \tau &\sim \mathcal{N} \left( \frac{n \bar{x} + v_0^{-2} m_0}{n + v_0^{-2}}, \; \left( \tau(n + v_0^{-2}) \right)^{-1} \right) \\
+	\tau \mid \mathbf{x}, \mu &\sim \text{Gamma} \left( a + \frac{n}{2}, \; b + \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 \right)
+\end{align*}
+
+The algorithm is initialized with an arbitrary value for $\tau^{(0)}$. At each iteration $t$, new values for $\mu$ and $\tau$ are drawn from their respective full conditionals using the most recent values of the other parameter. This process is repeated for a total of 10,000 iterations, with an appropriate number of samples discarded as burn-in.
+\textbf{}
+
 
 \subsection{How can you use \texttt{traceplot}, the autocorrelation function and the effective sample size to determine whether the chain has converged, and whether the appropriate burn-in period has been eliminated? Use one or more of these techniques to determine whether your chain has converged and an adequate burn-in has been taken.}	
 
