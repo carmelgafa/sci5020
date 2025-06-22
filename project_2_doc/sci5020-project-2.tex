@@ -842,14 +842,13 @@ Figure \ref{fig:img-2-post-summary} shows the posterior summary obtained after b
 \begin{enumerate}
 	\item The posterior estimate for $\mu$ is very close to the true value used in simulation: $\mu = 5$.
 
-	\item The posterior estimate for $\sigma^2$ is higher than the true value ($\sigma^2 = 4$), but within the 95\% credible interval. We have to keep in mind that we have a relatively small sample in this example; and upon changing the sample to 1000, the estimate approached the true value as can be seen in the summary values of Figure
-
+	\item The posterior estimate for $\sigma^2$ is slightly higher than the true value ($\sigma^2 = 4$), but it falls within the 95\% credible interval. This is expected given the relatively small sample size ($n = 100$). When the sample size was increased to $n = 1000$, the posterior estimate of $\sigma^2$ moved closer to the true value, as reflected in the summary statistics presented in Figure\ref{fig:img-2-post-summary1}
 \end{enumerate}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-2-post-summary1}
-	\caption{}
+	\caption{Posterior summaries based on 10,000 iterations of Gibbs sampling (with 2,000 burn-in discarded) using a simulated dataset of size $n = 1000$ from $\mathcal{N}(5, 4)$. The posterior mean of $\mu$ is 5.04, with a 95\% credible interval of [4.92, 5.16], closely matching the true value $\mu = 5$. The posterior mean of $\sigma^2$ is 3.76, with a 95\% credible interval of [3.45, 4.10], tightly capturing the true variance $\sigma^2 = 4$.}
 	\label{fig:img-2-post-summary1}
 \end{figure}
 
