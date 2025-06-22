@@ -507,6 +507,117 @@ an appendix. }
 
 
 
+	
+\section{Question 2}
+
+Let $ \textbf{x} = (x_1, \dots, x_n)'$ be a set of observations. Consider the following Bayesian model:
+
+$$
+p(\mu, \sigma^2 \mid \textbf{x}) 
+\propto 
+\left[ \prod_{i=1}^n \mathcal{N}(x_i \mid \mu, \sigma^2) \right] 
+\mathcal{N}(\mu \mid m_0, v_0^2) 
+\Gamma(\tau \mid a, b), 
+\quad \tau = \sigma^{-2}
+$$
+
+We do not know explicitly the posterior here but we know through the theory of conjugate priors that:
+
+$$
+p(\mu \mid \textbf{x}, \sigma^2) 
+\propto 
+\left[ \prod_{i=1}^n \mathcal{N}(x_i \mid \mu, \sigma^2) \right] 
+\mathcal{N}(\mu \mid m_0, v_0^2) = 
+\mathcal{N} \left( \frac{n \bar{x} + v_0^{-2} m_0}{n + v_0^{-2}}, \left(n + v_0^{-2} \right)^{-1} \right)
+$$
+
+$$
+p(\tau \mid \textbf{x}, \sigma^2) 
+\propto 
+\left[ \prod_{i=1}^n \mathcal{N}(x_i \mid \mu, \sigma^2) \right] 
+\Gamma(\tau \mid a, b) = \Gamma\left( a + \frac{n}{2}, \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 + b \right)
+$$
+
+
+\noindent \textbf{Recap of problem statement:}\\
+
+Letting $\mathbf{x} = (x_1, x_2, \dots, x_n)'$ be a vector of observed data points, we create a Bayesian model where the data is assumed to be generated from a Normal distribution with unknown mean $\mu$ and unknown variance $\sigma^2$:
+$$
+x_i \mid \mu, \sigma^2 \sim \mathcal{N}(\mu, \sigma^2), \quad i = 1, \dots, n
+$$
+
+We employ a Bayesian approach and set prior distributions for the unknown parameters $\mu$ and $\sigma^2$. Specifically, we place a Normal prior on the mean $\mu$ and a Gamma prior on the precision $\tau = \sigma^{-2}$:
+
+$$
+\mu \mid \tau \sim \mathcal{N}(m_0, v_0^2), \quad \tau \sim \text{Gamma}(a, b)
+$$
+
+In this hierarchical Bayesian model, we place a Normal prior on the mean $\mu$ conditional on the precision $\tau$, and a Gamma prior on $\tau$. This leads to a joint prior:
+
+$$
+p(\mu, \tau) = p(\mu \mid \tau) \cdot p(\tau)
+$$
+
+The use of conjugate priors guarantees that the posterior distributions for $\mu$ and $\tau$ maintain tractable, standard forms (Normal and Gamma), which makes efficient sampling via Gibbs sampling easier.
+
+The goal of Bayesian inference is to compute the posterior distribution of the parameters given the data:
+
+$$
+p(\mu, \tau \mid \mathbf{x}) \propto p(\mathbf{x} \mid \mu, \tau) \cdot p(\mu \mid \tau) \cdot p(\tau)
+$$
+
+The likelihood function for the independent normal observations is:
+
+$$
+p(\mathbf{x} \mid \mu, \tau) = \prod_{i=1}^n \left( \frac{\sqrt{\tau}}{\sqrt{2\pi}} \exp\left( -\frac{\tau}{2}(x_i - \mu)^2 \right) \right)
+$$
+
+Taking the product:
+
+$$
+p(\mathbf{x} \mid \mu, \tau) \propto \tau^{n/2} \exp\left( -\frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 \right)
+$$
+
+
+\[
+p(\mu \mid \tau) = \sqrt{\frac{\tau}{2\pi v_0^2}} \exp\left( -\frac{\tau}{2v_0^2} (\mu - m_0)^2 \right)
+\]
+
+The prior on $\tau$ is:
+
+$$
+p(\tau) \propto \tau^{a - 1} e^{-b\tau}
+$$
+
+Therefore, the joint posterior is:
+
+$$
+p(\mu, \tau \mid \mathbf{x}) \propto \tau^{n/2} \exp\left( -\frac{\tau}{2} \sum_{i=1}^n (x_i - \mu)^2 \right) \cdot \tau^{1/2} \exp\left( -\frac{\tau}{2v_0^2} (\mu - m_0)^2 \right) \cdot \tau^{a-1} e^{-b\tau}
+$$
+
+Combining powers of $\tau$:
+
+$$
+p(\mu, \tau \mid \mathbf{x}) \propto \tau^{a + \frac{n+1}{2} - 1} \exp\left( -\tau \left[ \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 + \frac{1}{2v_0^2} (\mu - m_0)^2 + b \right] \right)
+$$
+
+
+
+\subsection{Decide on values for $\mu$ and $\sigma^2$ and simulate 100 values from a normal distribution with this mean and variance.}
+	
+\subsection{Decide on hyperparameters $m_0, v_0^2, a, b$ which yield a non-informative prior.}
+
+
+\subsection{Pick an initial value of $\tau$. Use Gibbs' sampling to simulate 10000 values of $\mu$ and $\tau$ (excluding an appropriately chosen burn-in period).}
+
+\subsection{How can you use \texttt{traceplot}, the autocorrelation function and the effective sample size to determine whether the chain has converged, and whether the appropriate burn-in period has been eliminated? Use one or more of these techniques to determine whether your chain has converged and an adequate burn-in has been taken.}	
+
+\subsection{Make use of the \texttt{epdfPlot} command in the package \texttt{EnvStats} to determine the empirical pdf for $\mu$, $\tau$ and $\sigma^2$ (of course, make sure that your chain has converged and do not include the burn-in period).}
+
+
+
+
+
 \appendix
 
 \section{Question 1 code} \label{appendix:a}
