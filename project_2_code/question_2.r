@@ -4,7 +4,7 @@
 mu <- 5
 sigma_2 <- 4
 sigma <- sqrt(sigma_2)
-n <- 100
+n <- 1000
 
 set.seed(1001)
 x <- rnorm(n, mean = mu, sd = sigma)
@@ -37,7 +37,6 @@ tau_samples <- numeric(n_iter)
 #init tao
 tau_current <- 1 / var(x)  # start with reasonable value
 
-# Precompute quantities
 x_bar <- mean(x)
 
 for (t in 1:n_iter) {
@@ -45,13 +44,23 @@ for (t in 1:n_iter) {
   mean_mu <- var_mu * (tau_current * n * x_bar + m0 / v0_sq)
   mu_current <- rnorm(1, mean = mean_mu, sd = sqrt(var_mu))
 
-  # Sample tau | mu
+  #sample tao given mu
   shape_tau <- a + n / 2
   rate_tau <- b + sum((x - mu_current)^2) / 2
   tau_current <- rgamma(1, shape = shape_tau, rate = rate_tau)
 
-  # Store samples
+  #store
   mu_samples[t] <- mu_current
   tau_samples[t] <- tau_current
 }
 
+#burn-in
+mu_post <- mu_samples[(burn_in + 1):n_iter]
+tau_post <- tau_samples[(burn_in + 1):n_iter]
+sigma2_post <- 1 / tau_post  # for inference on variance
+
+
+print(mean(mu_post))
+print(quantile(mu_post, c(0.025, 0.5, 0.975)))
+print(mean(sigma2_post))
+print(quantile(sigma2_post, c(0.025, 0.5, 0.975)))

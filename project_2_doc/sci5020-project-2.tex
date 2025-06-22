@@ -731,8 +731,129 @@ With the conditional posterior distributions derived analytically, a Gibbs sampl
 	\tau \mid \mathbf{x}, \mu &\sim \text{Gamma} \left( a + \frac{n}{2}, \; b + \frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 \right)
 \end{align*}
 
-The algorithm is initialized with an arbitrary value for $\tau^{(0)}$. At each iteration $t$, new values for $\mu$ and $\tau$ are drawn from their respective full conditionals using the most recent values of the other parameter. This process is repeated for a total of 10,000 iterations, with an appropriate number of samples discarded as burn-in.
-\textbf{}
+
+The Gibbs sampler iteratively draws samples from the full conditional distributions of $\mu$ and $\tau$, constructing a Markov chain that converges to the joint posterior $p(\mu, \tau \mid \mathbf{x})$. The procedure is implemented as follows:
+
+\begin{itemize}
+	\item \textbf{Initialization}
+	\begin{itemize}
+		\item Set the number of iterations $T$ (10,000 in this case) and burn-in length (2000).
+		\item Create storage vectors for sampled values of $\mu$ and $\tau$.
+		\item Choose an initial value for $\tau^{(0)}$, e.g., the reciprocal of the sample variance.
+	\end{itemize}
+	
+	\item \textbf{Repeat for each iteration $t = 1, \dots, T$:}
+	\begin{enumerate}
+		\item \textbf{Sample $\mu^{(t)} \mid \tau^{(t-1)}, \mathbf{x}$:}
+		\begin{itemize}
+			\item Compute the conditional posterior variance:
+			$$
+			\text{Var}(\mu \mid \cdot) = \left( \tau^{(t-1)} n + \frac{1}{v_0^2} \right)^{-1}
+			$$
+			\item Compute the conditional posterior mean:
+			$$
+			\text{Mean}(\mu \mid \cdot) = \text{Var}(\mu \mid \cdot) \cdot \left( \tau^{(t-1)} n \bar{x} + \frac{m_0}{v_0^2} \right)
+			$$
+			\item Draw $\mu^{(t)}$ from $\mathcal{N}(\text{Mean}, \text{Var})$.
+		\end{itemize}
+		
+		\item \textbf{Sample $\tau^{(t)} \mid \mu^{(t)}, \mathbf{x}$:}
+		\begin{itemize}
+			\item Compute the shape parameter:
+			$$
+			a + \frac{n}{2}
+			$$
+			\item Compute the rate parameter:
+			$$
+			b + \frac{1}{2} \sum_{i=1}^n (x_i - \mu^{(t)})^2
+			$$
+			\item Draw $\tau^{(t)}$ from $\text{Gamma}(\text{shape}, \text{rate})$.
+		\end{itemize}
+		
+		\item \textbf{Store the draws:}
+		\begin{itemize}
+			\item Save $\mu^{(t)}$ and $\tau^{(t)}$ to their respective storage vectors.
+		\end{itemize}
+	\end{enumerate}
+	
+	\item \textbf{Post-sampling:}
+	\begin{itemize}
+		\item Discard the first $2{,}000$ iterations as burn-in to mitigate the effect of the initial values.
+		\item Use the remaining samples for inference and convergence diagnostics.
+	\end{itemize}
+\end{itemize}
+
+Code used for this question:
+
+\begin{lstlisting}
+## Question iii
+
+#sampler setting
+n_iter <- 10000
+burn_in <- 2000
+
+#storeage for mu and tao 
+mu_samples <- numeric(n_iter)
+tau_samples <- numeric(n_iter)
+
+#init tao
+tau_current <- 1 / var(x)  # start with reasonable value
+
+x_bar <- mean(x)
+
+for (t in 1:n_iter) {
+	var_mu <- 1 / (tau_current * n + 1 / v0_sq)
+	mean_mu <- var_mu * (tau_current * n * x_bar + m0 / v0_sq)
+	mu_current <- rnorm(1, mean = mean_mu, sd = sqrt(var_mu))
+	
+	#sample tao given mu
+	shape_tau <- a + n / 2
+	rate_tau <- b + sum((x - mu_current)^2) / 2
+	tau_current <- rgamma(1, shape = shape_tau, rate = rate_tau)
+	
+	#store
+	mu_samples[t] <- mu_current
+	tau_samples[t] <- tau_current
+}
+
+#burn-in
+mu_post <- mu_samples[(burn_in + 1):n_iter]
+tau_post <- tau_samples[(burn_in + 1):n_iter]
+sigma2_post <- 1 / tau_post  # for inference on variance
+
+
+print(mean(mu_post))
+print(quantile(mu_post, c(0.025, 0.5, 0.975)))
+print(mean(sigma2_post))
+print(quantile(sigma2_post, c(0.025, 0.5, 0.975)))
+\end{lstlisting}
+
+
+Figure \ref{fig:img-2-post-summary} shows the posterior summary obtained after burn-in was executed.
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-2-post-summary}
+	\caption{ Posterior summaries based on 8,000 post-burn-in samples from the Gibbs sampler. The estimated posterior mean of $\mu$ is approximately 4.99 with a 95\% credible interval of [4.55, 5.45]. The posterior mean of $\sigma^2$ is approximately 5.35 with a 95\% credible interval of [4.04, 7.06]. }
+	\label{fig:img-2-post-summary}
+\end{figure}
+
+\begin{enumerate}
+	\item The posterior estimate for $\mu$ is very close to the true value used in simulation: $\mu = 5$.
+
+	\item The posterior estimate for $\sigma^2$ is higher than the true value ($\sigma^2 = 4$), but within the 95\% credible interval. We have to keep in mind that we have a relatively small sample in this example; and upon changing the sample to 1000, the estimate approached the true value as can be seen in the summary values of Figure
+
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-2-post-summary1}
+	\caption{}
+	\label{fig:img-2-post-summary1}
+\end{figure}
+
+
 
 
 \subsection{How can you use \texttt{traceplot}, the autocorrelation function and the effective sample size to determine whether the chain has converged, and whether the appropriate burn-in period has been eliminated? Use one or more of these techniques to determine whether your chain has converged and an adequate burn-in has been taken.}	
