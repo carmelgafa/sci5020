@@ -857,6 +857,90 @@ Figure \ref{fig:img-2-post-summary} shows the posterior summary obtained after b
 
 \subsection{How can you use \texttt{traceplot}, the autocorrelation function and the effective sample size to determine whether the chain has converged, and whether the appropriate burn-in period has been eliminated? Use one or more of these techniques to determine whether your chain has converged and an adequate burn-in has been taken.}	
 
+This code conducts convergence diagnostics for the output of Gibbs sampling by utilizing the \texttt{coda} package.
+
+
+\begin{itemize}
+	
+	\item The \texttt{coda} package is loaded and the post-burn-in samples for $\mu$, $\tau$, and $\sigma^2$ are wrapped into \texttt{mcmc()} objects.
+	
+	\item Traceplots are generated for $\mu$ and 
+	$\sigma^2$. The plots are used to visually check if mixing and convergence are occurring by observing whether a stable mean is consistently fluctuated around by the chains.
+	
+	\item Autocorrelation plots  are produced fofor $\mu$ and  $\sigma^2$. The Autocorrelation plots  shows how correlated samples are across lags. Rapid decay of autocorrelation indicates good mixing.
+	
+	\item Effective Sample Size is computed for both $\mu$ and $\sigma^2$. Effective Sample Size quantifies how many effectively independent samples are present in the chains, accounting for autocorrelation. Higher Effective Sample Size values imply better sampling efficiency and more reliable inference from the posterior distribution.
+\end{itemize}
+
+\begin{lstlisting}
+	mu_chain <- mcmc(mu_post)
+	tau_chain <- mcmc(tau_post)
+	sigma2_chain <- mcmc(sigma2_post)
+	
+	#traceplota
+	par(mfrow = c(2, 1))
+	plot(mu_chain, main = "Traceplot of mu", col = "steelblue")
+	plot(sigma2_chain, main = "Traceplot of sigma^2", col = "darkgreen")
+	
+	#autocorrelation plt
+	par(mfrow = c(2, 1))
+	autocorr.plot(mu_chain, main = "Autocorrelation Plot of mu")
+	autocorr.plot(sigma2_chain, main = "Autocorrelation Plot of sigma^2")
+	
+	
+	ess_mu <- effectiveSize(mu_chain)
+	ess_sigma2 <- effectiveSize(sigma2_chain)
+	
+	cat("Effective Sample Size (mu):", ess_mu, "\n")
+	cat("Effective Sample Size (sigma^2):", ess_sigma2, "\n")
+\end{lstlisting}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-traceplot-mu}
+    \caption{Traceplot and posterior density plot for $\mu$. The traceplot indicates good mixing and stationarity, suggesting that the Markov chain has converged. The estimated posterior density of $\mu$,   unimodal and symmetric, with most samples concentrated around the posterior mean.}
+	\label{fig:img-traceplot-mu}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-mu}
+    \caption{Autocorrelation plot of the MCMC samples for $\mu$. The autocorrelation quickly drops to near zero after lag 1, indicating that the chain mixes well and successive samples are nearly independent. This suggests efficient exploration of the posterior distribution for $\mu$.}
+	\label{fig:img-autocorr-mu}
+\end{figure}
+
+
+The trace plot of $\mu$ shows that the sampled values are well-mixed and stable. The chain quickly explores the parameter space without clear trends or drifts, which indicates it has converged well. There are no long runs of similar values, showing that the chain mixes efficiently.
+
+The estimated distribution of $\mu$ is smooth and has a unimodal, indicating that the data is well-represented by the samples. The numerous rug ticks at the bottom of the plot show that the samples are spread evenly across the possible values.
+
+The autocorrelation plot indicates a sharp drop after lag zero, suggesting low autocorrelation between successive samples. This is a positive sign, as it indicates that the samples in the chain are nearly independent and the Markov chain is exploring the parameter space effectively.
+
+The reported effective sample size (ESS) for $\mu$ is 8000. Since the ESS is close to the total number of posterior draws, this confirms that the majority of samples are effectively independent. A high ESS enhances the reliability of posterior summary statistics.
+
+The diagnostics for $\mu$ provide strong evidence of good MCMC performance. The chain has converged, exhibits efficient mixing, and has negligible autocorrelation. Therefore, the posterior estimates for $\mu$ are statistically reliable, and no further adjustments like thinning or extending the chain are necessary.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-traceplot-var}
+    \caption{Traceplot and posterior density plot for  $\sigma^2$. The traceplot indicates good mixing and apparent stationarity of the chain, suggesting convergence to the posterior distribution. The marginal posterior density of $\sigma^2$,  is unimodal and concentrated within a narrow range, reflecting low posterior uncertainty.}
+	\label{fig:img-traceplot-var}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{img/img-autocorr-varpng}
+    \caption{Autocorrelation plot of the MCMC samples for $\sigma^2$. The autocorrelation drops sharply after lag 1, indicating low serial correlation and good mixing of the Markov chain. This supports the conclusion that the posterior distribution of $\sigma^2$ has been effectively explored.}
+	\label{fig:img-autocorr-varpng}
+\end{figure}
+
+
+
+
+
 \subsection{Make use of the \texttt{epdfPlot} command in the package \texttt{EnvStats} to determine the empirical pdf for $\mu$, $\tau$ and $\sigma^2$ (of course, make sure that your chain has converged and do not include the burn-in period).}
 
 

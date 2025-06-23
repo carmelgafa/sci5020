@@ -69,7 +69,7 @@ post_burned <- window(post, start = n_burnin)
 print(summary(post_burned))
 
 #autocorr mcmc samples
-autocorr.plot(post_burned[, "beta0"])   
+autocorr.plot(post_burned[, "beta0"])
 autocorr.plot(post_burned[, "beta1"])
 autocorr.plot(post_burned[, "beta2"])
 autocorr.plot(post_burned[, "beta3"])

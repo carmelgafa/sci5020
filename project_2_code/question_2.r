@@ -64,3 +64,26 @@ print(mean(mu_post))
 print(quantile(mu_post, c(0.025, 0.5, 0.975)))
 print(mean(sigma2_post))
 print(quantile(sigma2_post, c(0.025, 0.5, 0.975)))
+
+#question iv
+
+mu_chain <- mcmc(mu_post)
+tau_chain <- mcmc(tau_post)
+sigma2_chain <- mcmc(sigma2_post)
+
+#traceplota
+par(mfrow = c(2, 1))
+plot(mu_chain, main = "Traceplot of mu", col = "steelblue")
+plot(sigma2_chain, main = "Traceplot of sigma^2", col = "darkgreen")
+
+#autocorrelation plt
+par(mfrow = c(2, 1))
+autocorr.plot(mu_chain, main = "Autocorrelation Plot of mu")
+autocorr.plot(sigma2_chain, main = "Autocorrelation Plot of sigma^2")
+
+
+ess_mu <- effectiveSize(mu_chain)
+ess_sigma2 <- effectiveSize(sigma2_chain)
+
+cat("Effective Sample Size (mu):", ess_mu, "\n")
+cat("Effective Sample Size (sigma^2):", ess_sigma2, "\n")
