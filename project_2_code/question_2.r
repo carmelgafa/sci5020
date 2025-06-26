@@ -1,3 +1,4 @@
+library(EnvStats)
 
 ## Question i
 
@@ -87,3 +88,13 @@ ess_sigma2 <- effectiveSize(sigma2_chain)
 
 cat("Effective Sample Size (mu):", ess_mu, "\n")
 cat("Effective Sample Size (sigma^2):", ess_sigma2, "\n")
+
+
+# Question v
+
+#plot the three pdfs sidebyside
+par(mfrow = c(1, 3))
+
+epdfPlot(mu_post, main = "Empirical PDF of mu")
+epdfPlot(tau_post, main = "Empirical PDF of tao")
+epdfPlot(sigma2_post, main = "Empirical PDF of sigma^2")
