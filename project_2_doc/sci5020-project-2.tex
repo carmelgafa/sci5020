@@ -902,7 +902,7 @@ This code conducts convergence diagnostics for the output of Gibbs sampling by u
 	\label{fig:img-traceplot-mu}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{img/img-autocorr-mu}
     \caption{Autocorrelation plot of the MCMC samples for $\mu$. The autocorrelation quickly drops to near zero after lag 1, indicating that the chain mixes well and successive samples are nearly independent. This suggests efficient exploration of the posterior distribution for $\mu$.}
@@ -910,11 +910,11 @@ This code conducts convergence diagnostics for the output of Gibbs sampling by u
 \end{figure}
 
 
-The trace plot of $\mu$ shows that the sampled values are well-mixed and stable. The chain quickly explores the parameter space without clear trends or drifts, which indicates it has converged well. There are no long runs of similar values, showing that the chain mixes efficiently.
+The trace plot of $\mu$ in Figure \ref{fig:img-traceplot-mu} shows that the sampled values are well-mixed and stable. The chain quickly explores the parameter space without clear trends or drifts, which indicates it has converged well. There are no long runs of similar values, showing that the chain mixes efficiently.
 
 The estimated distribution of $\mu$ is smooth and has a unimodal, indicating that the data is well-represented by the samples. The numerous rug ticks at the bottom of the plot show that the samples are spread evenly across the possible values.
 
-The autocorrelation plot indicates a sharp drop after lag zero, suggesting low autocorrelation between successive samples. This is a positive sign, as it indicates that the samples in the chain are nearly independent and the Markov chain is exploring the parameter space effectively.
+The autocorrelation plot in Figure \ref{fig:img-autocorr-mu} indicates a sharp drop after lag zero, suggesting low autocorrelation between successive samples. This is a positive sign, as it indicates that the samples in the chain are nearly independent and the Markov chain is exploring the parameter space effectively.
 
 The reported effective sample size (ESS) for $\mu$ is 8000. Since the ESS is close to the total number of posterior draws, this confirms that the majority of samples are effectively independent. A high ESS enhances the reliability of posterior summary statistics.
 
@@ -937,6 +937,12 @@ The diagnostics for $\mu$ provide strong evidence of good MCMC performance. The 
 	\label{fig:img-autocorr-varpng}
 \end{figure}
 
+
+The trace plot in Figure \ref{fig:img-traceplot-var} for $\sigma^2$ shows a stable chain that mixes well and stays within a consistent range over 8000 iterations. There are no clear changes or trends, which suggests that the Markov chain has converged and is effectively taking samples from the posterior distribution.
+The estimated distribution of $\sigma^2$ shows one clear peak and is balanced, with smooth edges. The graph reveals that many samples are clustered around this peak, and the many rug ticks along the x-axis show that we have thoroughly explored the entire range of the distribution.
+The autocorrelation plot in Figure \ref{fig:img-autocorr-varpng} for $\sigma^2$ shows a rapid drop to near-zero autocorrelation after lag 1, with subsequent lags fluctuating closely around zero. This shows that there is little dependence between consecutive samples. This means that the chain mixes well.
+The effective sample size (ESS) for $\sigma^2$ is reported as 8000, which is equal to the total number of MCMC draws. This means that the samples are effectively independent, providing highly reliable estimates for posterior summaries.
+The diagnostics for $\sigma^2$ clearly indicate that the MCMC chain has converged and mixes well. The high ESS, low autocorrelation, and stable trace plot collectively confirm that the posterior inference for $\sigma^2$ is trustworthy and does not require additional tuning such as thinning or extended runs.
 
 
 

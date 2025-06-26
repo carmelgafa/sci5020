@@ -78,12 +78,12 @@ plot(sigma2_chain, main = "Traceplot of sigma^2", col = "darkgreen")
 
 #autocorrelation plt
 par(mfrow = c(2, 1))
-autocorr.plot(mu_chain, main = "Autocorrelation Plot of mu")
+# autocorr.plot(mu_chain, main = "Autocorrelation Plot of mu")
 autocorr.plot(sigma2_chain, main = "Autocorrelation Plot of sigma^2")
 
 
-ess_mu <- effectiveSize(mu_chain)
-ess_sigma2 <- effectiveSize(sigma2_chain)
+# ess_mu <- effectiveSize(mu_chain)
+# ess_sigma2 <- effectiveSize(sigma2_chain)
 
 cat("Effective Sample Size (mu):", ess_mu, "\n")
 cat("Effective Sample Size (sigma^2):", ess_sigma2, "\n")
